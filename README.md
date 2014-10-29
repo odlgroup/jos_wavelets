@@ -51,16 +51,9 @@ After the inverse wavelet transform a similar conversion from FLOATs to unsigned
 
 Note that if you want to run compile the test after changing the precision you have to first to rebuild the library.
 
-#### Optimization
+#### Optimization and debugging
 
-When building on UNIX type system (with e.g. make), the build mode is controlled by uncommenting the correct flags in the block 
-
-```cmake
-# Optimized 
-set(CMAKE_BUILD_TYPE Release)
-# Debug
-# set(CMAKE_BUILD_TYPE Debug)
-```
+When building on UNIX type system (with e.g. make), the build mode is controlled by the CMake flags `OPTIMIZATION` and `DEBUGGING`.
 
 Usage notes
 ----
