@@ -4,15 +4,15 @@ Libwavelet_transform
 This library written in C contains functions for computing
 wavelet coefficients in dimension 1, dimension 2 and dimension 3:
 
-* wawelet_transform1D()
-* wawelet_transform2D()
-* wawelet_transform3D()
+* wavelet_transform1D()
+* wavelet_transform2D()
+* wavelet_transform3D()
 
 and the corresponding inverse transforms
 
-* invwawelet_transform1D()
-* invwawelet_transform2D()
-* invwawelet_transform3D()
+* invwavelet_transform1D()
+* invwavelet_transform2D()
+* invwavelet_transform3D()
 
 there declarations is given in the header [wavelet_transform.h](wavelet/wavelet_transform.h).
 
