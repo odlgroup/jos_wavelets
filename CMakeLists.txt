@@ -2,13 +2,32 @@ cmake_minimum_required (VERSION 2.6)
 project (libwavelets)
 
 # Enable or disable high precision
-add_definitions(-DHIGH_PRECISION)
+option(HIGH_PRECISION "Use double precision" TRUE)
 
-# Optimized 
-set(CMAKE_BUILD_TYPE Release)
-# Debug
-# set(CMAKE_BUILD_TYPE Debug)
+if(HIGH_PRECISION)
+	add_definitions(-DHIGH_PRECISION)
+endif(HIGH_PRECISION)
+
+
+# Option to enable or disable debugging and optimization
+option(DEBUGGING "Enable debugging (in make)" FALSE)
+option(OPTIMIZATION "Enable optimization (in make)" TRUE)
+
+if(OPTIMIZATION)
+	if(DEBUGGING)
+		SET(CMAKE_BUILD_TYPE RelWithDebInfo)
+	else(DEBUGGING)
+		SET(CMAKE_BUILD_TYPE Release)
+	endif(DEBUGGING)
+else(OPTIMIZATION)
+	if(DEBUGGING)
+		SET(CMAKE_BUILD_TYPE Debug)
+	else(DEBUGGING)
+		SET(CMAKE_BUILD_TYPE None)
+	endif(DEBUGGING)
+endif(OPTIMIZATION)
+
 
 # Add sub directories as needed
 add_subdirectory (libwavelets)
-add_subdirectory (test)
+add_subdirectory (libwaveletstest)

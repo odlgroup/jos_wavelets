@@ -8,6 +8,6 @@ set(Sources
 include_directories ("${PROJECT_SOURCE_DIR}/libwavelets")
 link_directories ("${PROJECT_BINARY_DIR}/libwavelets")
 
-add_executable (test ${Headers} ${Sources})
+add_executable (libwaveletstest ${Headers} ${Sources})
 
-target_link_libraries(test libwavelets)
+target_link_libraries(libwaveletstest libwavelets)
