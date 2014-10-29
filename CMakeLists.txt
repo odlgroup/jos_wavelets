@@ -5,7 +5,7 @@ project (libwavelets)
 add_definitions(-DHIGH_PRECISION)
 
 # Optimized 
-# set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Release)
 # Debug
 # set(CMAKE_BUILD_TYPE Debug)
 

@@ -1,8 +1,8 @@
-Building the libraray libwavelet_transform
-------------------------------
+Libwavelet_transform
+----
 
-This librarary  written in C  contain  functions  for computing
-wavelet coefficients   in dimension 1, dimensien 2 and dimension 3:
+This library written in C contains functions for computing
+wavelet coefficients in dimension 1, dimension 2 and dimension 3:
 
 * wawelet_transform1D()
 * wawelet_transform2D()
@@ -14,44 +14,60 @@ and the corresponding inverse transforms
 * invwawelet_transform2D()
 * invwawelet_transform3D()
 
+there declarations is given in the header [wavelet_transform.h](wavelet/wavelet_transform.h).
 
-there declarations is given in "include/wavelet_transform.h" in order to build the library  go to the build directory an run "make clean" to remove any old objects file run "make libraries" in order to compile all source files in the directory  "source"  and collect and copy the library libwavelet_transform.a  to the local top library in order to run a test go to a  the "test" directort run first  "make clean"  and then  "make test" and then you can run the test:
-   
-    "./test"
+Building
+----
 
+The build process is governed by [cmake](http://www.cmake.org/).
+
+#### Unix:
+Start by going the the directory where you want your binaries and run
+
+    ccmake PATH_TO_SOURCE
+    make
+
+To test the code run
+
+    test
+
+#### Windows
+
+To build on windows, open the CMAKE gui, run configure-generate. Then open the project with Visual Studio.
+
+## Build flags
+
+The build can be controlled by changing build flags in the [cmake file](CMakeLists.txt).
+
+#### Precision
 All input vectors, coefficient vector and output vectors are
-assumed to be of the type  FLOAT
+assumed to be of the type FLOAT. Here FLOAT is defined to be a 32 bit float unless the macro HIGH_PRECISION is defined and in that case FLOAT is define as a 64. bit double
 
- Here  FLOAT is defined to be a 32 bits  float
- unless the macro  HIGH_PRECISION   is defined 
- and in that case FLOAT is define as a 64 bits double
+The macro HIGH_PRECISION will be defined at the compilations by uncommenting the line:
 
-The macro HIGH_PRECISION  will be defined at the complilations by
- uncommenting  the line in build/makefile.setting : 
-    #PRECISION = -dHIGH_PRECISION   
+    #add_definitions(-DHIGH_PRECISION) 
 
+Image data and Volume data as in DICOM are often written as arrays of unsigned 16 bits integers, but most often only 12 of those 16 bits are used. In order to use the wavelet transforms those arrays has to be converted by the user to arrays of type FLOATS.
 
-Image data and Volume  data  as in DICOM  are often  written as
- arrays of  unsigned 16 bits integers,
- but most often only 12 of those 16 bits are used.
-In order to use the wavelet transforms those arrays has to
-be converted - by the user -  to arrays of type FLOATS 
+After the inverse wavelet transform a similar conversion from FLOATs to unsigned integers may be done.
 
-After the inverse wavelet transform a similar convertion
-from FLOATs to unsigned integers may be done.
-  
-Note that if you want to run compile the test after changing the
-macro PRECION  you have to first to rebuild the  library.
+Note that if you want to run compile the test after changing the precision you have to first to rebuild the library.
 
+#### Optimization
 
+When building on UNIX type system (with e.g. make), the build mode is controlled by uncommenting the correct flags in the block 
 
+```cmake
+# Optimized 
+set(CMAKE_BUILD_TYPE Release)
+# Debug
+# set(CMAKE_BUILD_TYPE Debug)
+```
 
-IMPORTANT  ABOUT MEMORY: 
--------------------------------------
-IN-GOING ARRAYS ARE WRITTEN OVER:
-All wavelet_transforms  use the input array to stor intermediate
-results in the calculations. If you want to keep the input vector
-results you have to make your own copy of the input vector.
-  
-The same holds for the in-going waveletkoeffisiont vector
-when running the inverse wavelet transforms
+Usage notes
+----
+IN-GOING ARRAYS ARE WRITTEN OVER
+
+All wavelet_transforms use the input array to stor intermediate results in the calculations. If you want to keep the input vector results you have to make your own copy of the input vector.
+
+The same holds for the in-going wavelet coefficient vector when running the inverse wavelet transforms.
