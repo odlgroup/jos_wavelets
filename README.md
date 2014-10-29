@@ -14,7 +14,7 @@ and the corresponding inverse transforms
 * invwavelet_transform2D()
 * invwavelet_transform3D()
 
-there declarations is given in the header [wavelet_transform.h](wavelet/wavelet_transform.h).
+there declarations is given in the header [wavelet_transform.h](libwavelets/wavelet_transform.h).
 
 Building
 ----
@@ -40,8 +40,7 @@ To build on windows, open the CMAKE gui, run configure-generate. Then open the p
 The build can be controlled by changing build flags in the [cmake file](CMakeLists.txt).
 
 #### Precision
-All input vectors, coefficient vector and output vectors are
-assumed to be of the type FLOAT. Here FLOAT is defined to be a 32 bit float unless the macro HIGH_PRECISION is defined and in that case FLOAT is define as a 64. bit double
+All input vectors, coefficient vector and output vectors are assumed to be of the type FLOAT. Here FLOAT is defined to be a 32 bit float unless the macro HIGH_PRECISION is defined and in that case FLOAT is define as a 64. bit double
 
 The macro HIGH_PRECISION will be defined at the compilations by uncommenting the line:
 
@@ -63,6 +62,10 @@ set(CMAKE_BUILD_TYPE Release)
 # Debug
 # set(CMAKE_BUILD_TYPE Debug)
 ```
+
+Tests
+----
+Some test code with randomly generated data can be found in the [test](test) directory.
 
 Usage notes
 ----
