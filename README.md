@@ -29,7 +29,7 @@ Start by going the the directory where you want your binaries and run
 
 To test the code run
 
-    test
+    ./libwaveletstest/libwaveletstest
 
 #### Windows
 

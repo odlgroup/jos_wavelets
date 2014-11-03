@@ -48,8 +48,8 @@ int compimages(INTYPE* vector1,
     int inta, intb;
     const unsigned int OneMask = ONEMASK;
 #else
-    unsigned long int uiabsa, *uiaptr, *minptr, *maxptr;
-    const unsigned long int OneMask = ONEMASK;
+    unsigned long long uiabsa, *uiaptr, *minptr, *maxptr;
+	const unsigned long long OneMask = ONEMASK;
 #endif
     double error1, norm1;
     double errorlog2, normlog2;
@@ -83,10 +83,9 @@ int compimages(INTYPE* vector1,
         maxptr = (unsigned int*)&maxvalue;
         uiaptr = (unsigned int*)&a;
 #else
-        minptr = (unsigned long int*)&minvalue;
-        maxptr = (unsigned long int*)&maxvalue;
-        uiaptr = (unsigned long int*)&a;
-
+		minptr = (unsigned long long*)&minvalue;
+		maxptr = (unsigned long long*)&maxvalue;
+		uiaptr = (unsigned long long*)&a;
 #endif
 
         while (k-- > 0) {
