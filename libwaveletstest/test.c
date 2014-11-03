@@ -101,6 +101,7 @@ int main() {
     if (body != NULL) free(body);
     if (body_save != NULL) free(body_save);
     if (body_out != NULL) free(body_out);
+    if (diffvector != NULL) free(diffvector);
     if (waveletcoeff != NULL) free(waveletcoeff);
 
     /* show statistics from the test */
