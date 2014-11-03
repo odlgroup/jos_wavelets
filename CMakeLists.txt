@@ -27,7 +27,6 @@ else(OPTIMIZATION)
 	endif(DEBUGGING)
 endif(OPTIMIZATION)
 
-
 # Add sub directories as needed
 add_subdirectory (libwavelets)
 add_subdirectory (libwaveletstest)
