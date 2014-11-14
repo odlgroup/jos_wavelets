@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 2.6) 
 project (libwavelets)
 
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake) # add FindMatlab module
+
 # Enable or disable high precision
 option(HIGH_PRECISION "Use double precision" TRUE)
 
@@ -8,6 +10,12 @@ if(HIGH_PRECISION)
 	add_definitions(-DHIGH_PRECISION)
 endif(HIGH_PRECISION)
 
+# Enable or disable high precision
+option(MEX_ENABLED "Use double precision" FALSE)
+
+if(MEX_ENABLED)
+	find_package(Matlab REQUIRED)
+endif()
 
 # Option to enable or disable debugging and optimization
 option(DEBUGGING "Enable debugging (in make)" FALSE)
@@ -30,3 +38,6 @@ endif(OPTIMIZATION)
 # Add sub directories as needed
 add_subdirectory (libwavelets)
 add_subdirectory (libwaveletstest)
+if(MEX_ENABLED)
+	add_subdirectory (libwaveletsmex)
+endif(MEX_ENABLED)
