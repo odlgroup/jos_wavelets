@@ -13,6 +13,7 @@ set(Sources
 	bio13579.2d.c
 	bio13579.2dy.c
 	bio13579.3d.c
+	compimages3.main.c
 	getfilter.c
 	wavelet_dec3.c
 	wavelet_rec3.c
