@@ -20,7 +20,7 @@
 #define FLOAT double
 #endif
 
-#include "../include/wavelet_transform.h"
+#include "../libwavelets/wavelet_transform.h"
 #include "test.h"
 
 
