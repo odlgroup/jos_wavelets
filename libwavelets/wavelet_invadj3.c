@@ -47,7 +47,7 @@
 
 
 
-int wavelet_decompose3(FLOAT *inspacevector,
+int wavelet_invadjoint3(FLOAT *inspacevector,
 		       int Xlength,
 		       int Ylength,
 		       int Zlength,
@@ -67,6 +67,7 @@ int wavelet_decompose3(FLOAT *inspacevector,
 
 	 
 {
+
 int ifnotallskip=1;
 //long time0;
 //long time1;
@@ -83,8 +84,8 @@ int HLHsubsize;
 int HHLsubsize;
 int HHHsubsize;
 int HLLsubsize;
+
 int LLHlength;
-int LHLlength;
 int LHHlength;
 int HLLlength;
 int zscale;
@@ -102,14 +103,22 @@ int xylength;
 int z0length;
 int x0length;
 int y0length;
-void (*bioD_3d)();
-void (*bioD_skip_3d)();
-void (*bioD_3d_char)();
-void (*bioD_skip_3d_char)();
 
-/*   Following restrictions to the code are made
 
-     2015-12-09    Jan-Olov Stömberg     */
+void (*adjbioR_3d)();
+void (*adjbioR_skip_3d)();
+void (*adjbioR_3d_char)();
+void (*adjbioR_skip_3d_char)();
+
+
+
+ 
+
+/*   Following restrictions to the code are made                               \
+                                                                                
+                                                                               \
+                                                                                
+									       2015-12-09    Jan-Olov Stömberg     */
 
  MaxXYLevels=Levels;
  MaxZLevels=Levels;
@@ -119,13 +128,12 @@ void (*bioD_skip_3d_char)();
  /*******************/
 
 
-if(MaxXYLevels< Levels){
-printf("Program has not   yet implemented the parameter case  maxXYLevels < Levels \n"); 
-return 0;
-}
 
-getfilter(&bioD_3d,&bioD_skip_3d,
-	  &bioD_3d_char,&bioD_skip_3d_char,Filterlength,7);
+
+
+/*only using first pointer the other are redefined here */
+getadjointfilter(&adjbioR_3d,&adjbioR_skip_3d,
+	  &adjbioR_3d_char,&adjbioR_skip_3d_char,-Filterlength,7);
 
 
 
@@ -154,29 +162,28 @@ if((scale==maxscale)&&(scale>=minZLevels-1))LLL=covector;
       ylength=1+((Ylength-1) >>scale);
    zlength=1+((Zlength-1) >>scale);
 
- if(scale<=maxzscale){
+if(scale<=maxzscale){
       xlength=1+((Xlength-1)  >>scale);
       ylength=1+((Ylength-1) >>scale);
       zlength=1+((Zlength-1) >>scale);
        
-      if(!scale)   bioD_skip_3d_char
+      if(!scale)   adjbioR_skip_3d_char
 	(inspacevector,HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,xlength,ylength,zlength,
 	 0);
-      else   bioD_skip_3d
+      else   adjbioR_skip_3d
 	(vector,HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,xlength,ylength,zlength,
 	 0);
       vector=LLL;
-    }
+ }
       scale++;
-}
- 
+ }
 
 
- xlength=1+((Xlength-1)  >>scale);
- ylength=1+((Ylength-1) >>scale);
- zlength=1+((Zlength-1) >>scale);
- 
- skipsize=xlength*ylength*zlength;
+      xlength=1+((Xlength-1)  >>scale);
+      ylength=1+((Ylength-1) >>scale);
+   zlength=1+((Zlength-1) >>scale);
+
+skipsize=xlength*ylength*zlength;
 
 
 
@@ -188,14 +195,12 @@ while(scale<=maxscale){
   xlength=1+((Xlength-1)  >>scale);
   ylength=1+((Ylength-1) >>scale);
   if(scale>maxzscale) zlength=1+((Zlength-1) >>(maxzscale+1));
-  else 
-    if(scale<=maxzscale)
-      zlength=1+((Zlength-1) >>scale);
+  else  zlength=1+((Zlength-1) >>scale);
   
   mxlength=(xlength+1)>>1;
   mylength=(ylength+1)>>1;
-
-  if(scale<=maxzscale)mzlength=(zlength+1)/2;
+  if(scale>maxzscale) mzlength=zlength;
+  else mzlength=(zlength+1)/2;
 
 
   vector=LLL;
@@ -219,34 +224,33 @@ while(scale<=maxscale){
   LLLv=LLHv+LLHsubsize;
   }
 
+
   HLH=HLHv;
   HHL=HHLv;
   HHH=HHHv;
-if(scale>=minXYLevels-1){
   HLL=HLLv;
-}
 
-  if(scale>=minZLevels-1){
+
   LLH=LLHv;
   LHL=LHLv;
   LHH=LHHv;
-}
 
 if((scale==maxscale)&&(scale>=minZLevels-1)&&
      ((scale>=minXYLevels-1)||(HLLsubsize==0)))LLL=LLLv;
 
-if((scale<=maxzscale)&&(scale <MaxXYLevels)){
+
+ if((scale<=maxzscale)&&(scale <MaxXYLevels)){  //always true
  zlength=1+((Zlength-1) >>scale); 
   z0length=((zlength+1)>>1);
-  //printf("Doing scale %d here \n",scale);  
+  // printf("Doing scale %d here \n",scale);  
 if((!scale)){
-
-    bioD_3d_char  (inspacevector,HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
+    adjbioR_3d_char  (inspacevector,HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
                     xlength,ylength,zlength,ifnotallskip);
   }else{
-    bioD_3d  (vector,HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
+    adjbioR_3d  (vector,HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 	      xlength,ylength,zlength,ifnotallskip);
   }
+
  }
 
 
@@ -268,6 +272,7 @@ HH0=HLLv;
 
  }
  }
+ 
 
 	     z0length=((zlength+1)>>1);
 	     xylength=((ylength)>>1)*((xlength)>>1);   
@@ -277,24 +282,9 @@ HH0=HLLv;
 		   zscale=scale;
 		   H=LHHv;
 		   L=LHH; 
-		   vector=LHH;
-		  
+		   vector=LHH;		 
 /***********************************************/
 		 }
-
-
-	     z0length=((zlength+1)>>1);
-	     xylength=((ylength)>>1)*((xlength+1)>>1);   
-	     LHLlength =z0length*xylength;
- if(LHLlength>0){
-   /*******************************************/
-   zscale=scale;
-   H=LHLv;
-   L=LHL;
-   vector=LHL;
- 
-/***********************************************/
- }
 
 
  z0length=((zlength+1)>>1);  
@@ -306,41 +296,26 @@ HH0=HLLv;
 		   H=LLHv;
 		   L=LLH;
 		   vector=LLH;
-		   
+		 
 		   /***********************************************/
 		 }
 
 
-}
+ }
 
  vector=LLL;
-}      
+ }
 
 zscale=scale;
 
-if(zscale<minZLevels){
- 
- if(maxscale==-1)vector=inspacevector;
-/*******************************************/
-  xlength=1+((Xlength-1) >>scale);
-  ylength=1+((Ylength-1) >>scale); 
-  z0length=1+((Zlength-1) >>scale); 
 
-xylength=xlength*ylength;
-H=LLLv;
-L=LLL;
-if(maxscale==-1){
-vector=inspacevector;
-}
-
-}
  if(LLL!=LLLv)memcpy(LLLv,LLL,LLLsubsize*sizeof(FLOAT));
 
 /***********************************************/
 *colength_ptr=skipsize;
 
 return 0;
- }   
+}   
 
 
 /************************/

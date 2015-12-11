@@ -20,8 +20,10 @@
 
 */
 
-
+#include <stdio.h>
 #include "bio_parameters.h"
+//#include "boundary_macro.h"
+#define BMULT
 
 #ifndef FLOAT
 #define FLOAT float
@@ -42,22 +44,21 @@
 #define NORMALIZATION9   (0.763)
 #endif
 
-
 #ifndef NORMALIZATION7
 #define NORMALIZATION7   (0.98)
 #endif
 
-
 #ifndef NORMALIZATION5
 #define NORMALIZATION5   (0.5)
 #endif
+
 #ifndef NORMALIZATION3
 #define NORMALIZATION3   (1.0)
 #endif
 
 /**********************************************/
 
-void bioD9_3d(invector, HHH,HHL,HLH,HLL,
+void adjbioR9_3d(invector, HHH,HHL,HLH,HLL,
 	      LHH,LHL,LLH,LLL,xlength,ylength,zlength,
 	      ifnotAllskip)
 INTYPE *invector;
@@ -65,26 +66,33 @@ FLOAT *HLL,*HLH,*HHL,*HHH;
 FLOAT *LLL,*LLH,*LHL,*LHH;
 int  xlength,ylength,zlength; 
 int ifnotAllskip;
-
 { 
 
 
 
 
 
-	FLOAT x0=    -1.586134342059;
+
+  /*	FLOAT x0=    -1.586134342059;
 	FLOAT x1=    -0.052980118573;
 	FLOAT x2=     0.882911075529;
-	FLOAT x3=     0.443506852045;
+	FLOAT x3=     0.443506852045; */
+
+	FLOAT x0=    1.586134342059;
+	FLOAT x1=     0.052980118573;
+	FLOAT x2=    -0.882911075529;
+	FLOAT x3=     -0.443506852045;
+
+
+
 
 	/* Rotlevels=4;*/
 
 FLOAT X0,X1,X2,X3,X4;
 int pairity; 
 FLOAT Norm;
- int dim;
-
- dim=(xlength>1)+(ylength>1)+(zlength>1);
+int dim;
+dim = (xlength > 1)+(ylength > 1)+(zlength > 1);
 
  if(0||ifnotAllskip){
  X0=x0;
@@ -97,38 +105,44 @@ FLOAT Norm;
  X1=x0*x1;
  X2=x1*x2;
  X3=1.0;
- 
  X4=1.0/x2;
+
  }
 
- if(dim==3)Norm =(x0*x1*x2);
+ X4=1/X4;  /* pairity correction*/
+
+ if(dim==3)Norm =(x0*x1*x2*x3);
  if(dim==2)Norm=1.0; 
- if(dim==1)Norm= 1.0/(x0*x1*x2);
+ if(dim==1)Norm= 1.0/(x0*x1*x2*x3);
 
-
- if(xlength>1) Norm /= NORMALIZATION9;
-if(ylength>1) Norm  /=  NORMALIZATION9; 
- if(zlength>1) Norm  /=  NORMALIZATION9;
-
+ if(xlength>1) Norm *= NORMALIZATION9;
+if(ylength>1) Norm  *=  NORMALIZATION9; 
+ if(zlength>1) Norm  *=  NORMALIZATION9;
 
 
 if(dim==0){Norm=1.0;X0=1.0;X1=1.0;X2=1.0;X3=1.0;X4=1.0;}
-
-
+  
+#ifdef BMULT
+  boundarymultiply(invector,xlength,ylength,zlength,2.0);
+#endif
 
 /*warning invector will be overwritten */
-pairity=1;
+pairity=0;
 
 bio_3d_premult(invector,xlength,ylength,zlength,X0,pairity);
-pairity=0;
-
-bio_3d_premult(invector,xlength,ylength,zlength,X1,pairity);
 pairity=1;
 
-bio_3d_premult(invector,xlength,ylength,zlength,X2,pairity);
+bio_3d_premult(invector,xlength,ylength,zlength,X1,pairity);
 pairity=0;
 
+bio_3d_premult(invector,xlength,ylength,zlength,X2,pairity);
+pairity=1;
+
 bio_3d_premult(invector,xlength,ylength,zlength,X3,pairity);
+
+#ifdef BMULT
+  boundarymultiply(invector,xlength,ylength,zlength,0.5);
+#endif
 
 if(ifnotAllskip){
 bioD1__3d(invector,HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
@@ -138,7 +152,7 @@ bioD1__3d(invector,HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
       }
 
 /*********************************************/
- void bioR9_3d
+ void adjbioD9_3d
 (HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 outvector,xlength,ylength,zlength,
  ifnotAllskip)
@@ -147,20 +161,26 @@ FLOAT *LLL,*LLH,*LHL,*LHH;
 OUTTYPE *outvector;
 int  xlength,ylength; 
 int ifnotAllskip;
+
 {
-	FLOAT ix0=    1.586134342059;
+  /*	FLOAT ix0=    1.586134342059;
 	FLOAT ix1=     0.052980118573;
 	FLOAT ix2=    -0.882911075529;
-	FLOAT ix3=     -0.443506852045;
+	FLOAT ix3=     -0.443506852045; */
+
+	FLOAT ix0=    -1.586134342059;
+	FLOAT ix1=     -0.052980118573;
+	FLOAT ix2=    0.882911075529;
+	FLOAT ix3=     0.443506852045;
 
 
 
 FLOAT iX0,iX1,iX2,iX3,iX4;
 int pairity; 
 FLOAT Norm;
-int dim;
+ int dim;
 
- dim=(xlength>1)+(ylength>1)+(zlength>1);
+dim = (xlength > 1)+(ylength > 1)+(zlength > 1);
 
 if(ifnotAllskip){
   iX4=ix3;
@@ -175,44 +195,58 @@ if(ifnotAllskip){
   iX1=1.0/(ix1*ix0);
   iX0=1.0/ix0;
 }
+ 
 
+ iX4=1/iX4; 
 
-
-
-
- if(dim==3)Norm =1.0/(ix0*ix1*ix2);
+ if(dim==3)Norm =1.0/(ix0*ix1*ix2*ix3);
  if(dim==2)Norm=1.0; 
- if(dim==1)Norm= (ix0*ix1*ix2);
+ if(dim==1)Norm= (ix0*ix1*ix2*ix3);
+ 
 
+ if(xlength>1) Norm /= NORMALIZATION9;
+if(ylength>1) Norm  /=  NORMALIZATION9; 
+ if(zlength>1) Norm  /=  NORMALIZATION9;
 
-
- if(xlength>1) Norm *= NORMALIZATION9;
-if(ylength>1) Norm  *=  NORMALIZATION9; 
- if(zlength>1) Norm  *=  NORMALIZATION9;
 
 if(dim==0){Norm=1.0;iX0=1.0;iX1=1.0;iX2=1.0;iX3=1.0;iX4=1.0;}
 
-
- 
 if(ifnotAllskip){
   bioR1__3d( HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 	    outvector,xlength,ylength,zlength,iX4,Norm);
-pairity=0;
+pairity=1;
+
+#ifdef BMULT
+  boundarymultiply(outvector,xlength,ylength,zlength,2.0);
+#endif
+
 
 bio_3d_postmult(outvector,xlength,ylength,zlength,iX3,pairity);
 }
+ else{
+  bioR1_3dskip(LLL,outvector,xlength,ylength,zlength,iX4,Norm);
 
-else  bioR1_3dskip(LLL,outvector,xlength,ylength,zlength,iX4,Norm);
-pairity=1;
-bio_3d_postmult(outvector,xlength,ylength,zlength,iX2,pairity);
+#ifdef BMULT
+  boundarymultiply(outvector,xlength,ylength,zlength,2.0);
+#endif
+
+ }
 pairity=0;
-bio_3d_postmult(outvector,xlength,ylength,zlength,iX1,pairity);
+bio_3d_postmult(outvector,xlength,ylength,zlength,iX2,pairity);
 pairity=1;
+bio_3d_postmult(outvector,xlength,ylength,zlength,iX1,pairity);
+pairity=0;
+ 
 bio_3d_postmult(outvector,xlength,ylength,zlength,iX0,pairity);
-   }
+
+#ifdef BMULT
+  boundarymultiply(outvector,xlength,ylength,zlength,0.5);
+#endif
+  
+ }
 
 /*********************************************/
-void bioD7_3d
+void adjbioR7_3d
            (invector, HHH,HHL,HLH,HLL,
 	    LHH,LHL,LLH,LLL,xlength,ylength,zlength,
            ifnotAllskip)
@@ -221,19 +255,24 @@ FLOAT *HLL,*HLH,*HHL,*HHH;
 FLOAT *LLL,*LLH,*LHL,*LHH;
 int  xlength,ylength,zlength; 
 int ifnotAllskip;
+
 { 
 
 
- FLOAT x0=    0.2;
+  /* FLOAT x0=    0.2;
  FLOAT x1=   -0.357142857136;
- FLOAT x2=     0.21;
+ FLOAT x2=     0.21;*/
+
+ FLOAT x0=    -0.2;
+ FLOAT x1=   0.357142857136;
+ FLOAT x2=     -0.21;
 
 FLOAT X0,X1,X2,X3;
 int pairity; 
 FLOAT Norm;
-int dim;
+ int dim;
 
- dim=(xlength>1)+(ylength>1)+(zlength>1);
+dim = (xlength > 1)+(ylength > 1)+(zlength > 1);
 
  if(0||ifnotAllskip){
 X0=x0;
@@ -248,33 +287,45 @@ X3=1.0/x1;
 
 }
 
+ /* 
+Norm = 1.0 /(X0*X1*X2*X3) ;
+if(xlength>1) Norm *= X1;
+if(ylength>1) Norm *= X1;
+if(zlength>1) Norm *= X1;
+*/
 
- if(dim==3)Norm =(x0*x1);
+
+ X3=1/X3;  /* pairity correction*/
+
+ if(dim==3)Norm =(x0*x1*x2);
  if(dim==2)Norm=1.0; 
- if(dim==1)Norm= 1.0/(x0*x1);
+ if(dim==1)Norm= 1.0/(x0*x1*x2);
 
 
+ if(xlength>1) Norm *= NORMALIZATION7;
+if(ylength>1) Norm  *=  NORMALIZATION7; 
+ if(zlength>1) Norm  *=  NORMALIZATION7;
 
-if(xlength>1) Norm /= NORMALIZATION7;
-if(ylength>1) Norm  /=  NORMALIZATION7; 
-if(zlength>1)Norm  /=  NORMALIZATION7;
 
 
 if(dim==0){Norm=1.0;X0=1.0;X1=1.0;X2=1.0;X3=1.0;}
-Norm=Norm /NORMALIZATION7;
+ 
+#ifdef BMULT
+  boundarymultiply(invector,xlength,ylength,zlength,2.0);
+#endif
 
-
-
-
+ 
 /*warning invector will be overwritten */
-
-pairity=0;
-bio_3d_premult(invector,xlength,ylength,zlength,X0,pairity);
 pairity=1;
-bio_3d_premult(invector,xlength,ylength,zlength,X1,pairity);
+bio_3d_premult(invector,xlength,ylength,zlength,X0,pairity);
 pairity=0;
-bio_3d_premult(invector,xlength,ylength,zlength,X2,pairity);
+bio_3d_premult(invector,xlength,ylength,zlength,X1,pairity);
+pairity=1;
 
+bio_3d_premult(invector,xlength,ylength,zlength,X2,pairity);
+#ifdef BMULT
+  boundarymultiply(invector,xlength,ylength,zlength,0.5);
+#endif
 
 if(ifnotAllskip)bioD1__3d(invector,HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 			  xlength,ylength,zlength,X3,Norm);
@@ -282,7 +333,7 @@ else  bioD1_3dskip(invector,LLL,xlength,ylength,zlength,X3,Norm);
       
 }
 /**********************************************/
- void bioR7_3d(HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
+ void adjbioD7_3d(HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 	       outvector,xlength,ylength,zlength,
  ifnotAllskip)
 FLOAT *HLL,*HLH,*HHL,*HHH;
@@ -290,19 +341,24 @@ FLOAT *LLL,*LLH,*LHL,*LHH;
 OUTTYPE *outvector;
 int  xlength,ylength; 
 int ifnotAllskip;
+
 {
 
 
- FLOAT ix0=    -0.2;
+  /* FLOAT ix0=    -0.2;
  FLOAT ix1=     0.357142857136;
- FLOAT ix2=    -0.21;
+ FLOAT ix2=    -0.21;*/
+
+FLOAT ix0=    0.2;
+ FLOAT ix1=  -0.357142857136;
+ FLOAT ix2=    0.21;
 
 FLOAT iX0,iX1,iX2,iX3;
 int pairity; 
 FLOAT Norm;
-int dim;
+ int dim;
 
- dim=(xlength>1)+(ylength>1)+(zlength>1);
+dim = (xlength > 1)+(ylength > 1)+(zlength > 1);
 
  if(ifnotAllskip){
   iX3=ix2;
@@ -317,49 +373,62 @@ int dim;
  }
 
 
- /*
+ /* 
 Norm = 1.0 /(iX0*iX1*iX2*iX3) ;
 if(xlength>1) Norm *= iX1;
 if(ylength>1) Norm *= iX1;
 if(zlength>1) Norm *= iX1;
- */
+PAIRITYCORRECTION(dim,Norm,iX3) 
+*/
 
- if(dim==3)Norm =1.0/(ix0*ix1);
+ iX3=1/iX3; 
+
+ if(dim==3)Norm =1.0/(ix0*ix1*ix2);
  if(dim==2)Norm=1.0; 
- if(dim==1)Norm= (ix0*ix1);
+ if(dim==1)Norm= (ix0*ix1*ix2);
+  
 
-
-
- if(xlength>1) Norm *= NORMALIZATION7;
-if(ylength>1) Norm  *=  NORMALIZATION7; 
- if(zlength>1) Norm  *=  NORMALIZATION7;
-
+if(xlength>1) Norm /= NORMALIZATION7;
+if(ylength>1) Norm  /=  NORMALIZATION7; 
+if(zlength>1)Norm  /=  NORMALIZATION7;
 
 
 if(dim==0){Norm=1.0;iX0=1.0;iX1=1.0;iX2=1.0;iX3=1.0;}
 
 
 
- 
- 
-
 if(ifnotAllskip){
 bioR1__3d(HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 	  outvector,xlength,ylength,zlength,iX3,Norm);
-pairity=0;
+pairity=1;
+#ifdef BMULT
+  boundarymultiply(outvector,xlength,ylength,zlength,2.0);
+#endif
 
 bio_3d_postmult(outvector,xlength,ylength,zlength,iX2,pairity);
+
+
 }
-else  bioR1_3dskip(LLL,outvector,xlength,ylength,zlength,iX3,Norm);
-pairity=1;
-bio_3d_postmult(outvector,xlength,ylength,zlength,iX1,pairity);
+ else{
+  bioR1_3dskip(LLL,outvector,xlength,ylength,zlength,iX3,Norm);
+#ifdef BMULT
+  boundarymultiply(outvector,xlength,ylength,zlength,2.0);
+#endif
+
+ }
 pairity=0;
+bio_3d_postmult(outvector,xlength,ylength,zlength,iX1,pairity);
+pairity=1;
 bio_3d_postmult(outvector,xlength,ylength,zlength,iX0,pairity);
+#ifdef BMULT
+  boundarymultiply(outvector,xlength,ylength,zlength,0.5);
+#endif
+
    }
 
 
 /*****************************************************/
-void bioD5_3d
+void adjbioR5_3d
            (invector, HHH,HHL,HLH,HLL,
 	    LHH,LHL,LLH,LLL,xlength,ylength,zlength,
            ifnotAllskip)
@@ -371,15 +440,18 @@ int ifnotAllskip;
 
 { 
 
-  FLOAT x0=    -0.50;
-  FLOAT x1=	0.25;
+  /*FLOAT x0=    -0.50;
+  FLOAT x1=	0.25;*/
+
+  FLOAT x0=    0.50;
+  FLOAT x1=	-0.25;
 
 FLOAT X0,X1,X2;
 int pairity; 
 FLOAT Norm;
-int dim;
+ int dim;
 
- dim=(xlength>1)+(ylength>1)+(zlength>1);
+dim = (xlength > 1)+(ylength > 1)+(zlength > 1);
 
   if(0||ifnotAllskip){
  X0=x0;
@@ -391,35 +463,53 @@ X1=x0*x1;
  X2=1.0/x0;
   }
 
+  /*
+Norm = 1.0 /(X0*X1*X2) ;
+if(xlength>1) Norm *= X0;
+if(ylength>1) Norm *= X0;
+if(zlength>1) Norm *= X0;
+*/
 
- if(dim==3)Norm =(x0);
+ X2=1/X2;  /* pairity correction*/
+
+ if(dim==3)Norm =(x0*x1);
  if(dim==2)Norm=1.0; 
- if(dim==1)Norm= 1.0/(x0);
+ if(dim==1)Norm= 1.0/(x0*x1);
 
 
- if(xlength>1) Norm /= NORMALIZATION5;
-if(ylength>1) Norm  /=  NORMALIZATION5; 
- if(zlength>1) Norm  /=  NORMALIZATION5;
+
+if(xlength>1) Norm *= NORMALIZATION5;
+if(ylength>1) Norm  *=  NORMALIZATION5; 
+ if(zlength>1) Norm  *=  NORMALIZATION5;
 
 
 if(dim==0){Norm=1.0;X0=1.0;X1=1.0;X2=1.0;}
-
+ 
+#ifdef BMULT
+  boundarymultiply(invector,xlength,ylength,zlength,2.0);
+#endif
 
 
 /*warning invector will be overwritten */
-pairity=1;
-bio_3d_premult(invector,xlength,ylength,zlength,X0,pairity);
 pairity=0;
+bio_3d_premult(invector,xlength,ylength,zlength,X0,pairity);
+pairity=1;
 bio_3d_premult(invector,xlength,ylength,zlength,X1,pairity);
+
+#ifdef BMULT
+  boundarymultiply(invector,xlength,ylength,zlength,0.5);
+#endif
+
 if(ifnotAllskip)bioD1__3d(invector,HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 			  xlength,ylength,zlength,X2,Norm);
 else  {
+
 bioD1_3dskip(invector,LLL,xlength,ylength,zlength,X2,Norm);
 }
 
       }
 /******************************************************/
- void bioR5_3d
+ void adjbioD5_3d
 (HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 outvector,xlength,ylength,zlength,
  ifnotAllskip)
@@ -430,56 +520,88 @@ int  xlength,ylength;
 int ifnotAllskip;
 {
 
-  FLOAT ix0=      0.50;
-  FLOAT ix1=     -0.25;
+  /*  FLOAT ix0=      0.50;
+      FLOAT ix1=     -0.25;*/
+
+  FLOAT ix0=      -0.50;
+  FLOAT ix1=     0.25;
 
 
 FLOAT iX0,iX1,iX2;
 int pairity;
 FLOAT Norm;
-int dim;
-
- dim=(xlength>1)+(ylength>1)+(zlength>1);
+ int dim;
+dim = (xlength > 1)+(ylength > 1)+(zlength > 1);
 
   if(ifnotAllskip){
- iX2=ix1/NORMALIZATION5;
+ iX2=ix1;
  iX1=1.0/(ix1*ix0);
  iX0=1.0/ix0;
   }else{
- iX2=ix0/NORMALIZATION5;
+ iX2=ix0;
  iX1=1.0;
  iX0=1.0/ix0;
   }
 
 
 
- if(dim==3)Norm =1.0/(ix0);
+
+  /*
+Norm = 1.0 /(iX0*iX1*iX2) ;
+if(xlength>1) Norm *= iX0;
+if(ylength>1) Norm *= iX0;
+if(zlength>1) Norm *= iX0;
+ PAIRITYCORRECTION(dim,Norm,iX2) 
+*/
+
+ iX2=1/iX2; 
+
+ if(dim==3)Norm =1.0/(ix0*ix1);
  if(dim==2)Norm=1.0; 
- if(dim==1)Norm= (ix0);
+ if(dim==1)Norm= (ix0*ix1);
 
+if(xlength>1) Norm /= NORMALIZATION5;
+if(ylength>1) Norm  /=  NORMALIZATION5; 
+if(zlength>1) Norm  /=  NORMALIZATION5;
 
-if(xlength>1) Norm *= NORMALIZATION5;
-if(ylength>1) Norm  *=  NORMALIZATION5; 
- if(zlength>1) Norm  *=  NORMALIZATION5;
 
 if(dim==0){Norm=1.0;iX0=1.0;iX1=1.0;iX2=1.0;}
-
 
 
 if(ifnotAllskip){
 bioR1__3d(HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 	  outvector,xlength,ylength,zlength,iX2,Norm);
-pairity=0;
-bio_3d_postmult(outvector,xlength,ylength,zlength,iX1,pairity);
-}
-else  bioR1_3dskip(LLL,outvector,xlength,ylength,zlength,iX2,Norm);
 pairity=1;
+#ifdef BMULT
+  boundarymultiply(outvector,xlength,ylength,zlength,2.0);
+#endif
+
+bio_3d_postmult(outvector,xlength,ylength,zlength,iX1,pairity);
+
+#ifdef BMULT
+  boundarymultiply(outvector,xlength,ylength,zlength,0.5);
+#endif
+
+}
+ else{  bioR1_3dskip(LLL,outvector,xlength,ylength,zlength,iX2,Norm);
+
+#ifdef BMULT
+  boundarymultiply(outvector,xlength,ylength,zlength,2.0);
+#endif
+
+ }
+pairity=0;
 bio_3d_postmult(outvector,xlength,ylength,zlength,iX0,pairity);
+
+#ifdef BMULT
+  boundarymultiply(outvector,xlength,ylength,zlength,0.5);
+#endif
+
    }
 
 
 /********************************/
-void bioD3_3d
+void adjbioR3_3d
            (invector, HHH,HHL,HLH,HLL,
 	    LHH,LHL,LLH,LLL,xlength,ylength,zlength,
            ifnotAllskip)
@@ -489,44 +611,45 @@ FLOAT *LLL,*LLH,*LHL,*LHH;
 int  xlength,ylength,zlength; 
 int ifnotAllskip;
 { 
-  FLOAT x0=    -0.5;
+  /*  FLOAT x0=    -0.5;*/
+ FLOAT x0=    0.5;
+
 
  
 
 FLOAT X0=x0; 
-FLOAT X1=x0;
+FLOAT X1=1.0 /x0;
 
 
 int pairity; 
 
 FLOAT Norm;
- int dim;
+Norm = 1.0 ;
 
 
+if(xlength>1) Norm *= NORMALIZATION3;
+if(ylength>1) Norm  *=  NORMALIZATION3; 
+if(zlength>1) Norm  *=  NORMALIZATION3;
 
-
-
-
-dim = (xlength > 1)+(ylength > 1)+(zlength > 1);
+/* norm = X0 / X1 ==1;*/
+/*
+		 printf("\ninvector in:\n");
+		 for(v=0;v<8;v++)printf(" %f ",invector[v]);
+			 printf("\n");
+*/
+#ifdef BMULT
+  boundarymultiply(invector,xlength,ylength,zlength,2.0);
+#endif
 ;
-if(dim==3)Norm=x0;
-if(dim==2)Norm=1.0;
-if(dim==1)Norm=1.0/x0;
-
-
- if(xlength>1) Norm /= NORMALIZATION3;
-if(ylength>1) Norm  /=  NORMALIZATION3; 
- if(zlength>1) Norm  /=  NORMALIZATION3;
-
- if(dim==0){Norm=1.0;X1=1.0;}
-
-
-
 /*warning invector will be overwritten */
- pairity=1; /* NOTE: A DIFFERENT PAIRITY HERE THE ON LONGER FILTERS */ 
+ pairity=0; /* NOTE: A DIFFERENT PAIRITY HERE THE ON LONGER FILTERS */ 
   bio_3d_premult(invector,xlength,ylength,zlength,X0,pairity);
-  /*bio_3d(invector,xlength,ylength,zlength,tempvector,x0,pairity);*/
-  /* switching needed since we have pairith=1: */
+
+#ifdef BMULT
+  boundarymultiply(invector,xlength,ylength,zlength,0.5);
+#endif
+
+// printf("X1= %f  and Norm =%f \n",X1,Norm);
 
 if(ifnotAllskip)bioD1__3d(invector,HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 			  xlength,ylength,zlength,X1,Norm);
@@ -534,7 +657,7 @@ else  bioD1_3dskip(invector,LLL,xlength,ylength,zlength,X1,Norm);
 
       }
 /**********************************************/
- void bioR3_3d
+ void adjbioD3_3d
 (HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 outvector,xlength,ylength,zlength,
  ifnotAllskip)
@@ -544,7 +667,8 @@ OUTTYPE *outvector;
 int  xlength,ylength; 
 int ifnotAllskip;
 {
- FLOAT ix0=    0.5;
+  /*FLOAT ix0=    0.5;*/
+ FLOAT ix0=    -0.5;
  
  
 
@@ -554,12 +678,6 @@ int ifnotAllskip;
 
 int pairity;
 FLOAT Norm;
- int dim;
-
-dim = (xlength > 1)+(ylength > 1)+(zlength > 1);
-
-
-
 
   if(ifnotAllskip){
  iX1=ix0;
@@ -569,31 +687,40 @@ dim = (xlength > 1)+(ylength > 1)+(zlength > 1);
  iX0=1.0;
   }
 
-  iX1=1/iX1;
-
-if(dim==3)Norm=1.0/ix0;
-if(dim==2)Norm=1.0;
-if(dim==1)Norm=ix0;
 
 
- if(xlength>1) Norm *= NORMALIZATION3;
-if(ylength>1) Norm  *=  NORMALIZATION3; 
- if(zlength>1) Norm  *=  NORMALIZATION3;
+Norm = 1.0  ;
 
+ if(xlength>1) Norm /= NORMALIZATION3;
+if(ylength>1) Norm  /=  NORMALIZATION3; 
+ if(zlength>1) Norm  /=  NORMALIZATION3;
 
-
- if(dim==0){Norm=1.0;iX0=1.0;iX1=1.0;}
  
+ /* switching needed since we have pairith=1: */
+/* 
+Norm=Norm/iX1;
+iX1=1/iX1;
+*/
+
 if(ifnotAllskip){
 bioR1__3d(HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 	  outvector,xlength,ylength,zlength,iX1,Norm);
- pairity=1; /* NOTE: A DIFFERENT PAIRITY HERE THE ON LONGER FILTERS */ 
+ pairity=0; /* NOTE: A DIFFERENT PAIRITY HERE THE ON LONGER FILTERS */ 
+#ifdef BMULT
+  boundarymultiply(outvector,xlength,ylength,zlength,2.0);
+#endif
 bio_3d_postmult(outvector,xlength,ylength,zlength,iX0,pairity);
-}else  bioR1_3dskip(LLL,outvector,xlength,ylength,zlength,iX1,Norm);
-   }
+#ifdef BMULT
+  boundarymultiply(outvector,xlength,ylength,zlength,0.5);
+#endif
+
+ }else{  bioR1_3dskip(LLL,outvector,xlength,ylength,zlength,iX1,Norm);
+
+ }  
+ }
 
 /***************************************/ 
-void bioD1_3d
+void adjbioR1_3d
            (invector, HHH,HHL,HLH,HLL,
 	    LHH,LHL,LLH,LLL,xlength,ylength,zlength,
            ifnotAllskip)
@@ -611,7 +738,7 @@ if(ifnotAllskip)bioD1__3d(invector,HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 else  bioD1_3dskip(invector,LLL,xlength,ylength,zlength,X0,Norm);
       }
 /*************************************************/
- void bioR1_3d
+ void adjbioD1_3d
 (HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 outvector,xlength,ylength,zlength,
  ifnotAllskip)

@@ -17,7 +17,7 @@
       
 
 
-int wavelet_reconstruct3(FLOAT *reccovector,
+int wavelet_adjoint3(FLOAT *reccovector,
                          int colength,
                          FLOAT  *outvector,
 			 int Xlength,
@@ -41,22 +41,17 @@ int wavelet_reconstruct3(FLOAT *reccovector,
   //long time1=1;
 FLOAT *vector=NULL;
 int scale,xlength,ylength,zlength,maxscale;
-int  xylength,z0length,maxzscale; 
+int  xylength,maxzscale; 
 int mxlength,mylength,mzlength;
-int x0length,y0length;
-int xyscale;
 FLOAT *LLL=NULL,*LHH=NULL,*LLH=NULL,*LHL=NULL;
 FLOAT *HLL=NULL,*HHH=NULL,*HLH=NULL,*HHL=NULL;
 FLOAT  *LLLv=NULL,*LHHv=NULL,*LLHv=NULL,*LHLv=NULL;
 FLOAT *HLLv=NULL;
 FLOAT *LLLv0=NULL;
-FLOAT *HLL0;
-FLOAT *LL;
 int skipsize;
 int Size;
 int finalxlength,finalylength,finalzlength;
 int finalLLLsize;
-
 int LLLsubsize;
 int LLHsubsize;
 int LHLsubsize;
@@ -65,33 +60,34 @@ int HLHsubsize;
 int HHLsubsize;
 int HHHsubsize;
 int HLLsubsize;
-
-
-int LLsubsize;
 int ifnotallskip=1;
+void  (*adjbioD_3d)();
+void  (*adjbioD_skip_3d)();
+void  (*adjbioD_3d_char)();
+void  (*adjbioD_skip_3d_char)();
+
+
+
+
  
-void  (*bioR_3d)();
-void  (*bioR_skip_3d)();
-void  (*bioR_3d_char)();
-void  (*bioR_skip_3d_char)();
 
-
-
-
-
-/*   Following restrictions to the code are made
-
+/*   Following restrictions to the code are made                                                                  
+                                                                                                                  
      2015-12-09    Jan-Olov Stömberg     */
 
-maxXYLevels=Levels;
+ maxXYLevels=Levels;
  maxZLevels=Levels;
  minZLevels=0;
  minXYLevels=0;
 
  /*******************/
 
-getfilter(&bioR_3d,&bioR_skip_3d,
-	  &bioR_3d_char,&bioR_skip_3d_char,-Filterlength,7);
+
+
+getadjointfilter(&adjbioD_3d,&adjbioD_skip_3d,
+	  &adjbioD_3d_char,&adjbioD_skip_3d_char,Filterlength,7);
+
+
 
  Size=Xlength*Ylength*Zlength;
 xlength=1+((Xlength-1)>>Skip);
@@ -127,11 +123,6 @@ xlength=Xlength;
 ylength=Ylength;
 zlength=Zlength;
 
-/********************************************/
-
-
-
-
 
 /************************************************/
 
@@ -139,13 +130,13 @@ zlength=Zlength;
 
   xlength=1+((Xlength-1)  >>scale);
   ylength=1+((Ylength-1) >>scale);
-  if(scale>maxzscale) zlength=1+((Zlength-1) >>(maxzscale+1));
-  else  zlength=1+((Zlength-1) >>scale);
+
+  zlength=1+((Zlength-1) >>scale);
    
   mxlength=(xlength+1)>>1;
   mylength=(ylength+1)>>1;
-  if(scale>maxzscale) mzlength=zlength;
-  else mzlength=(zlength+1)/2;
+ 
+mzlength=(zlength+1)/2;
 
 
   vector=outvector;
@@ -170,7 +161,6 @@ zlength=Zlength;
 	HLH   = HLL -  HLHsubsize;
   }
 
-
     HHL= HLH- HHLsubsize;
 	HHH =  HHL-   HHHsubsize;
 
@@ -180,76 +170,61 @@ zlength=Zlength;
    LHLv = LHL ;
    LHHv = LHH  ;
 
-if(minXYLevels-1>scale)
-       HLLv = HLL + LLLsubsize;
-
  LLLv0 = outvector+LLLsubsize;
-
-
 
    
   ifnotallskip=(scale<Skip?0:1);
     
- 
+  xylength=mylength*(xlength-mxlength);
+/*********************************
+	
 
-	     xylength=mylength*(xlength-mxlength);   
+ ******************************/
 
 if(scale<maxscale)LLL=outvector;
 
-if((minXYLevels>minZLevels)&&(zlength-mzlength>0)&&(minXYLevels-1>scale)){
-
-HLL0 =HLL+HLLsubsize; 
-HLL = HLLv ;
  
-xyscale=minXYLevels-1;
- x0length=1+((Xlength-1) >>xyscale); 
- y0length=1+((Ylength-1) >>xyscale); 
- zlength=1+((Zlength-1) >>scale); 
-z0length=zlength>>1;
-LLsubsize=((x0length+1)>>1)*((y0length+1)>>1);
-LL=HLL0-z0length*LLsubsize;
-HLL0=LL;
-
-} /**** end if(minXYLevels>minZLevels .. */
-
-
-
+ 
     xylength=((ylength+1)>>1)*((xlength)>>1);
  
+
+
 
 /************************************************/
     
 /********************************************/
   xylength=((ylength)>>1)*((xlength+1)>>1);  
    
+
    
 /************************************************/
     
 /********************************************/
 	     xylength=((ylength)>>1)*(xlength>>1);
- 			
+ 		
 	
 
 zlength=1+((Zlength-1) >>scale);
+ 
 
+
+ 
  
 /************************************************/
    
 
-
+ 
 
  vector=outvector;
-
 if((scale<=maxzscale)&&(scale <maxXYLevels)){
  zlength=1+((Zlength-1) >>scale); 
-  z0length=((zlength+1)>>1);
- 
+  
 if(scale==0){
-bioR_3d_char(HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
+adjbioD_3d_char(HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
                    outvector,xlength,ylength,zlength,
                    ifnotallskip);
 }else{
- bioR_3d(HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
+ adjbioD_3d(HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
                    vector,xlength,ylength,zlength,
                    ifnotallskip);
 
@@ -260,11 +235,13 @@ bioR_3d_char(HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 
 
 
-
  LLL=vector;
   scale--;
-}
- LLL=outvector;
+ }
+
+ if((scale==maxscale)&&(scale >=  minZLevels-1))LLL=reccovector;
+ else LLL=outvector;
+
 
  while(scale>=0){
    ifnotallskip=0;
@@ -272,14 +249,27 @@ bioR_3d_char(HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
   ylength=1+((Ylength-1) >>scale);
 
    
-  if(1){
+
+ zlength=1+((Zlength-1) >>scale);
+   /************************************************/
+   
+   vector=outvector;
+   LLH=NULL;
+   LHL=NULL;
+   LHH=NULL;
+   HLL=NULL;
+   HLH=NULL;
+   HHL=NULL;
+   HHH=NULL;
+   if((scale<=maxzscale)&&(scale <maxXYLevels)){
 	 zlength=1+((Zlength-1) >>scale); 
+
 	 if(scale==0){
-	   bioR_3d_char(HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
+	   adjbioD_3d_char(HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 					outvector,xlength,ylength,zlength,
 					ifnotallskip);
 	 }else{
-	   bioR_3d(HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
+	   adjbioD_3d(HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 			   vector,xlength,ylength,zlength,
 			   ifnotallskip);
 	 }

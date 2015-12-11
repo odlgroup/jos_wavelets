@@ -14,6 +14,18 @@ and the corresponding inverse transforms
 * invwavelet_transform2D()
 * invwavelet_transform3D()
 
+and also the corresponding adjoint transforms
+
+* adjointwavelet_transform1D()
+* adjointwavelet_transform2D()
+* adjointwavelet_transform3D()
+
+and the corresponding inverse transforms
+
+* adjointinvwavelet_transform1D()
+* adjointinvwavelet_transform2D()
+* adjointinvwavelet_transform3D()
+
 there declarations is given in the header [wavelet_transform.h](wavelet/wavelet_transform.h).
 
 Building
