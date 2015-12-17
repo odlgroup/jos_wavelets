@@ -17,6 +17,7 @@ int wavelet_transform3D(FLOAT *inspacevector,
 		       int xlength,
 		       int ylength,
 		       int zlength,
+			int levels,
      		       FLOAT *waveletcoefficients
 			      			){
 int co_length;
@@ -26,7 +27,7 @@ return wavelet_decompose3(inspacevector,
 			   ylength,
 			   zlength,
 			   9,/* char Filterlength */
-			   10, /* char Levels */
+			   levels,
 			   0,  /* char minZLevels */ 
 			   10, /* char MaxZLevels */ 
 			   0,  /* char minXYLevels */ 
@@ -44,6 +45,7 @@ int invwavelet_transform3D(FLOAT * waveletcoefficients,
                          int xlength,
 			 int ylength,
                          int zlength,
+			   int levels,  
                          FLOAT  *outvector){
 
 return  wavelet_reconstruct3(waveletcoefficients,
@@ -53,7 +55,7 @@ return  wavelet_reconstruct3(waveletcoefficients,
 			     ylength,
 			     zlength, 
 			     9, /*Filterlength*/
-			     10, /*Levels of transforms*/
+			     levels,
 			     0,  /* min ZLevel (changes coeff_length) */
 			     10, /* maxZLevels */ 
 			      0, /* minXYLevels (changes coeff_length)*/ 
@@ -69,6 +71,7 @@ return  wavelet_reconstruct3(waveletcoefficients,
 int wavelet_transform2D(FLOAT *inspacevector,
 		       int xlength,
 		       int ylength,
+		       int levels,		       
 		       FLOAT *waveletcoefficients
 			      			){
 int co_length;
@@ -78,7 +81,7 @@ return wavelet_decompose3(inspacevector,
 			   ylength,
 			   1,/*zlength,*/
 			   9, /* char Filterlength */
-			   10, /* char Levels */
+			   levels,
 			   0,  /* char minZLevels */ 
 			   10, /* char MaxZLevels */ 
 			   0,  /* char minXYLevels */ 
@@ -95,6 +98,7 @@ return wavelet_decompose3(inspacevector,
 int invwavelet_transform2D(FLOAT * waveletcoefficients,
                          int xlength,
 			 int ylength,
+		       int levels,		       
 			 FLOAT  *outvector){
 
 return  wavelet_reconstruct3(waveletcoefficients,
@@ -104,7 +108,7 @@ return  wavelet_reconstruct3(waveletcoefficients,
 			     ylength,
 			     1, /* zlength*/ 
 			     9, /*Filterlength*/
-			     10, /*Levels of transforms*/
+			     levels,
 			     0,  /* min ZLevel (changes coeff_length) */
 			     10, /* maxZLevels */ 
 			      0, /* minXYLevels (changes coeff_length)*/ 
@@ -121,6 +125,7 @@ return  wavelet_reconstruct3(waveletcoefficients,
 
 int wavelet_transform1D(FLOAT *inspacevector,
 		       int xlength,
+		       int levels,		       
 			FLOAT *waveletcoefficients
 			      			){
 int co_length;
@@ -130,7 +135,7 @@ return wavelet_decompose3(inspacevector,
 			  1,/*ylength*/
 			   1,/*zlength,*/
 			   9, /* char Filterlength */
-			   10, /* char Levels */
+			  levels,
 			   0,  /* char minZLevels */ 
 			   10, /* char MaxZLevels */ 
 			   0,  /* char minXYLevels */ 
@@ -145,6 +150,7 @@ return wavelet_decompose3(inspacevector,
 
 int invwavelet_transform1D(FLOAT * waveletcoefficients,
                          int xlength,
+		       int levels,		       
 			  FLOAT  *outvector){
 
 return  wavelet_reconstruct3(waveletcoefficients,
@@ -154,7 +160,7 @@ return  wavelet_reconstruct3(waveletcoefficients,
 			     1, /*ylength*/
 			     1, /* zlength*/ 
 			     9, /*Filterlength*/
-			     10, /*Levels of transforms*/
+			     levels,
 			     0,  /* min ZLevel (changes coeff_length) */
 			    10, /* maxZLevels */ 
 			      0, /* minXYLevels (changes coeff_length)*/ 
