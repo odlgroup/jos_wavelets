@@ -54,7 +54,7 @@ double errorlog10=0;
 int nonexactnumber=0;
 int Size=0;
 FLOAT SNR;
-
+ int k;
 /* for 2D test and  1D test : */
 //Zlength=1; 
 /* for 1D test:  */
@@ -72,7 +72,7 @@ ptr=body;
 
  time0=clock();    /* uses c-call clock()  for timing process */ 
  
-for(int k=0;k<size;k++){
+for(k=0;k<size;k++){
 a=mask12&random();       /*generetin 12 bits unsigned integer */
 //a=1.0;
  *ptr++=(FLOAT)a;       /* converting and saving on FLOAT array  */
@@ -81,7 +81,7 @@ time1=clock();
 
 /*  saving a backup  of the generated arry */
  memcpy(body_save,body,(size_t)size*sizeof(FLOAT));
- //for(int k=0;k<size;k++)printf("indata  %f , ",body[k]);
+ //for(k=0;k<size;k++)printf("indata  %f , ",body[k]);
  printf("\n");
  time2=clock(); 
 
@@ -98,7 +98,7 @@ time1=clock();
 
  time3=clock();
  
- //for(int k=0;k<size;k++)printf("wcoeff  %f , ",waveletcoeff[k]);
+ //for(k=0;k<size;k++)printf("wcoeff  %f , ",waveletcoeff[k]);
  printf("\n");
  
 
@@ -115,7 +115,7 @@ time1=clock();
  //adjointwavelet_transform1D(waveletcoeff,Xlength,10,body_out);
 
  time4=clock();
- // for(int k=0;k<size;k++)printf("outdata  %f , ",body_out[k]);
+ // for(k=0;k<size;k++)printf("outdata  %f , ",body_out[k]);
  printf("\n");
 
  /* collect statistics on arrays */

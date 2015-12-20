@@ -72,14 +72,14 @@ adjointvector=(FLOAT*)calloc((unsigned int)size,sizeof(FLOAT));
 
  time0=clock();    /* uses c-call clock()  for timing process */ 
  ptr=randbody;
-for(int k=0;k<size;k++){
+for(k=0;k<size;k++){
 a=mask12&random();
 //a=1.0;       /*generetin 12 bits unsigned integer */
  *ptr++ =(FLOAT)a;       /* converting and saving on FLOAT array  */
  }
 
  ptr=randcoeff;
-for(int k=0;k<size;k++){
+for(k=0;k<size;k++){
   a=mask12&random();
   //  a=1.0;
        /*generetin 12 bits unsigned integer */
@@ -89,8 +89,8 @@ for(int k=0;k<size;k++){
 
 time1=clock(); 
 /*copying files */
- for(int k=0;k<size;k++)body_save[k]=randbody[k];
- for(int k=0;k<size;k++)coeff_save[k]=randcoeff[k];
+ for(k=0;k<size;k++)body_save[k]=randbody[k];
+ for(k=0;k<size;k++)coeff_save[k]=randcoeff[k];
  time2=clock();
  /*  calling the wavelet transform*/
  adjointinvwavelet_transform3D(randbody,Xlength,Ylength,Zlength,10,adjointvector);
