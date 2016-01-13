@@ -9,7 +9,7 @@
 
 
 
-/* NOTE that  MaxZLevqels and MaxXYLevels should be at least as
+/* NOTE that  MaxZLevels and MaxXYLevels should be at least as
 Levels   in the parameterchoice, this means they have no effect,
 and the only the 3d filters will be used.
 the 2d and 2dy filters are not updated yet with the adjoint filters  */
@@ -19,6 +19,7 @@ int adjointinvwavelet_transform3D(FLOAT *inspacevector,
 		       int xlength,
 		       int ylength,
 		       int zlength,
+		       char Filterlength, /* 1,3,5,7 or 9 */
 		       int levels,		       
      		       FLOAT *waveletcoefficients
 			      			){
@@ -34,7 +35,7 @@ return wavelet_invadjoint3(inspacevector,
 			   xlength,
 			   ylength,
 			   zlength,
-			   9, /* char Filterlength */
+			   Filterlength,
 			   levels, 
 			   0,  /* char minZLevels */ 
 			   10, /* char MaxZLevels */ 
@@ -53,6 +54,7 @@ int adjointwavelet_transform3D(FLOAT * waveletcoefficients,
                          int xlength,
 			 int ylength,
                          int zlength,
+		       char Filterlength, /* 1,3,5,7 or 9 */
 		       int levels,		       
                          FLOAT  *outvector){
 
@@ -62,7 +64,7 @@ return  wavelet_adjoint3(waveletcoefficients,
 			     xlength,
 			     ylength,
 			     zlength, 
-			     9, /*Filterlength*/
+			 Filterlength,
 			     levels,
 			     0,  /* min ZLevel (changes coeff_length) */
 			     10, /* maxZLevels */ 
@@ -79,6 +81,7 @@ return  wavelet_adjoint3(waveletcoefficients,
 int adjointinvwavelet_transform2D(FLOAT *inspacevector,
 		       int xlength,
 		       int ylength,
+		       char Filterlength, /* 1,3,5,7 or 9 */
 		       int levels,		       
 		       FLOAT *waveletcoefficients
 			      			){
@@ -88,7 +91,7 @@ return wavelet_invadjoint3(inspacevector,
 			   xlength,
 			   ylength,
 			   1,/*zlength,*/
-			   9, /* char Filterlength */
+			   Filterlength,
 			   levels,
 			   0,  /* char minZLevels */ 
 			   0, /* char MaxZLevels */ 
@@ -106,6 +109,7 @@ return wavelet_invadjoint3(inspacevector,
 int adjointwavelet_transform2D(FLOAT * waveletcoefficients,
                          int xlength,
 			 int ylength,
+		       char Filterlength, /* 1,3,5,7 or 9 */
 		       int levels,		       
 			 FLOAT  *outvector){
 
@@ -115,7 +119,7 @@ return  wavelet_adjoint3(waveletcoefficients,
 			     xlength,
 			     ylength,
 			     1, /* zlength*/ 
-			     9, /*Filterlength*/
+			 Filterlength,
 			     levels, 
 			     0,  /* min ZLevel (changes coeff_length) */
 			     0, /* maxZLevels */ 
@@ -133,6 +137,7 @@ return  wavelet_adjoint3(waveletcoefficients,
 
 int adjointinvwavelet_transform1D(FLOAT *inspacevector,
 		       int xlength,
+		       char Filterlength, /* 1,3,5,7 or 9 */
 		       int levels,		       
 			FLOAT *waveletcoefficients
 			      			){
@@ -142,7 +147,7 @@ return wavelet_invadjoint3(inspacevector,
 			   xlength,
 			  1,/*ylength*/
 			   1,/*zlength,*/
-			   9, /* char Filterlength */
+			   Filterlength,
 			   levels, 
 			   0,  /* char minZLevels */ 
 			   0, /* char MaxZLevels */ 
@@ -158,6 +163,7 @@ return wavelet_invadjoint3(inspacevector,
 
 int adjointwavelet_transform1D(FLOAT * waveletcoefficients,
                          int xlength,
+		       char Filterlength, /* 1,3,5,7 or 9 */
 			       int levels,  
 			  FLOAT  *outvector){
 
@@ -167,7 +173,7 @@ return  wavelet_adjoint3(waveletcoefficients,
 			     xlength,
 			     1, /*ylength*/
 			     1, /* zlength*/ 
-			     9, /*Filterlength*/
+			 Filterlength,
 			     levels, /*Levels of transforms*/
 			     0,  /* min ZLevel (changes coeff_length) */
 			     0, /* maxZLevels */ 
