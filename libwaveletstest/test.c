@@ -89,12 +89,12 @@ time1=clock();
  /* CHOOSE dimension  1D  2D or 3D  also TRANSFORM or ADJOINT */
  /*  ERASE  comment sign  "//" for one only of following six lines
  */
- wavelet_transform3D(body,Xlength,Ylength,Zlength,10,waveletcoeff);
- //wavelet_transform2D(body,Xlength,Ylength,10,waveletcoeff);
- //wavelet_transform1D(body,Xlength,10,waveletcoeff);
- //adjointinvwavelet_transform3D(body,Xlength,Ylength,Zlength,10,waveletcoeff);
- //adjointinvwavelet_transform2D(body,Xlength,Ylength,10,waveletcoeff);
- //adjointinvwavelet_transform1D(body,Xlength,10,waveletcoeff);
+ wavelet_transform3D(body,Xlength,Ylength,Zlength,9,10,waveletcoeff);
+ //wavelet_transform2D(body,Xlength,Ylength,9,10,waveletcoeff);
+ //wavelet_transform1D(body,Xlength,9,10,waveletcoeff);
+ //adjointinvwavelet_transform3D(body,Xlength,Ylength,Zlength,9,10,waveletcoeff);
+ //adjointinvwavelet_transform2D(body,Xlength,Ylength,9,10,waveletcoeff);
+ //adjointinvwavelet_transform1D(body,Xlength,9,10,waveletcoeff);
 
  time3=clock();
  
@@ -107,12 +107,12 @@ time1=clock();
  */ 
  /* CHOOSE dimension  1D  2D or 3D  also TRANSFORM or ADJOINT */
 
- invwavelet_transform3D(waveletcoeff,Xlength,Ylength,Zlength,10,body_out);
- //invwavelet_transform2D(waveletcoeff,Xlength,Ylength,10,body_out);
- //invwavelet_transform1D(waveletcoeff,Xlength,10,body_out);
- //adjointwavelet_transform3D(waveletcoeff,Xlength,Ylength,Zlength,10,body_out);
- //adjointwavelet_transform2D(waveletcoeff,Xlength,Ylength,10,body_out);
- //adjointwavelet_transform1D(waveletcoeff,Xlength,10,body_out);
+ invwavelet_transform3D(waveletcoeff,Xlength,Ylength,Zlength,9,10,body_out);
+ //invwavelet_transform2D(waveletcoeff,Xlength,Ylength,9,10,body_out);
+ //invwavelet_transform1D(waveletcoeff,Xlength,9,10,body_out);
+ //adjointwavelet_transform3D(waveletcoeff,Xlength,Ylength,Zlength,9,10,body_out);
+ //adjointwavelet_transform2D(waveletcoeff,Xlength,Ylength,9,10,body_out);
+ //adjointwavelet_transform1D(waveletcoeff,Xlength,9,10,body_out);
 
  time4=clock();
  // for(k=0;k<size;k++)printf("outdata  %f , ",body_out[k]);

@@ -93,10 +93,10 @@ time1=clock();
  for(k=0;k<size;k++)coeff_save[k]=randcoeff[k];
  time2=clock();
  /*  calling the wavelet transform*/
- adjointinvwavelet_transform3D(randbody,Xlength,Ylength,Zlength,10,adjointvector);
- //  wavelet_transform3D(randbody,Xlength,Ylength,Zlength,10,waveletcoeff);
- // wavelet_transform2D(body,Xlength,Ylength,10,waveletcoeff);
- //wavelet_transform1D(body,Xlength,10,waveletcoeff);
+ adjointinvwavelet_transform3D(randbody,Xlength,Ylength,Zlength,9,10,adjointvector);
+ //  wavelet_transform3D(randbody,Xlength,Ylength,Zlength,9,10,waveletcoeff);
+ // wavelet_transform2D(body,Xlength,Ylength,9,10,waveletcoeff);
+ //wavelet_transform1D(body,Xlength,9,10,waveletcoeff);
 
  time3=clock();
 
@@ -105,10 +105,10 @@ time1=clock();
      for(v=0;v<Xlength*Ylength*Zlength;v++)printf(" %f ",randcoeff[v]);
 */
 
- //adjointwavelet_transform3D(randcoeff,Xlength,Ylength,Zlength,10,adjointvector);
- invwavelet_transform3D(randcoeff,Xlength,Ylength,Zlength,10,invwaveletvector );
- //invwavelet_transform2D(waveletcoeff,Xlength,Ylength,10,body_out);
- //invwavelet_transform1D(Waveletcoeff,Xlength,10,body_out);
+ //adjointwavelet_transform3D(randcoeff,Xlength,Ylength,Zlength,9,10,adjointvector);
+ invwavelet_transform3D(randcoeff,Xlength,Ylength,Zlength,9,10,invwaveletvector );
+ //invwavelet_transform2D(waveletcoeff,Xlength,Ylength,9,10,body_out);
+ //invwavelet_transform1D(Waveletcoeff,Xlength,9,10,body_out);
  time4=clock();
 
  sum1=0.0;
