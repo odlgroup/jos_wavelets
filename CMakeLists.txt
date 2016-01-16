@@ -3,6 +3,15 @@ project (libwavelets)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake) # add FindMatlab module
 
+
+# Choosing order of wavelet coefficients
+
+#Default order:     LLL_N, LLH_N ...   .... HHL_1, HHH_1 
+
+#for order:   HHH_1,HHL_1 ..                ..,LLH_N,LLL_N   
+#uncomment following line
+# 	add_definitions(-DCOARSEEND)
+
 # Enable or disable high precision
 option(HIGH_PRECISION "Use double precision" TRUE)
 
