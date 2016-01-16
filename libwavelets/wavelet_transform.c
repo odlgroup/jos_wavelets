@@ -17,9 +17,9 @@ int wavelet_transform3D(FLOAT *inspacevector,
 		       int xlength,
 		       int ylength,
 		       int zlength,
-		       char Filterlength, /* 1,3,5,7 or 9 */
+		       int Filterlength, /* 1,3,5,7 or 9 */
 		       int levels,
-     		       FLOAT *waveletcoefficients
+			FLOAT *waveletcoefficients
 			      			){
 int co_length;
 			
@@ -27,13 +27,9 @@ return wavelet_decompose3(inspacevector,
 			   xlength,
 			   ylength,
 			   zlength,
-	 		  Filterlength,
-			   levels,
-			   0,  /* char minZLevels */ 
-			   10, /* char MaxZLevels */ 
-			   0,  /* char minXYLevels */ 
-			   10,  /*char MaxXYLevels */
-			   0, /*char Skip */
+	 		  (char)Filterlength,
+			   (char)levels,
+			   (char)0, /*char Skip */
 			   waveletcoefficients,
 			   &co_length, 
 			   0 /* char ifnotSilent: 1 for printing */
@@ -46,9 +42,9 @@ int invwavelet_transform3D(FLOAT * waveletcoefficients,
                          int xlength,
 			 int ylength,
                          int zlength,
-		       char Filterlength, /* 1,3,5,7 or 9 */
+			   int Filterlength, /* 1,3,5,7 or 9 */
 			   int levels,  
-                         FLOAT  *outvector){
+			   FLOAT  *outvector){
 
 return  wavelet_reconstruct3(waveletcoefficients,
 			     xlength*ylength*zlength,/*coeffcient_length*/
@@ -56,13 +52,9 @@ return  wavelet_reconstruct3(waveletcoefficients,
 			     xlength,
 			     ylength,
 			     zlength, 
-			     Filterlength,
-			     levels,
-			     0,  /* min ZLevel (changes coeff_length) */
-			     10, /* maxZLevels */ 
-			      0, /* minXYLevels (changes coeff_length)*/ 
-			     10, /* maxXYLevels */ 
-			     0,  /* Skip: general skiplevel
+			    (char) Filterlength,
+			     (char)levels,
+			     (char)0,  /* Skip: general skiplevel
 				    (changes coeff_length)*/ 
 			     0 /*ifnotSilent  set 1 for printing */
 			     );
@@ -73,7 +65,7 @@ return  wavelet_reconstruct3(waveletcoefficients,
 int wavelet_transform2D(FLOAT *inspacevector,
 		       int xlength,
 		       int ylength,
-		       char Filterlength, /* 1,3,5,7 or 9 */
+		       int Filterlength, /* 1,3,5,7 or 9 */
 		       int levels,		       
 		       FLOAT *waveletcoefficients
 			      			){
@@ -83,13 +75,9 @@ return wavelet_decompose3(inspacevector,
 			   xlength,
 			   ylength,
 			   1,/*zlength,*/
-			  Filterlength,
-			   levels,
-			   0,  /* char minZLevels */ 
-			   10, /* char MaxZLevels */ 
-			   0,  /* char minXYLevels */ 
-			   10,  /*char MaxXYLevels */
-			   0, /*char Skip */
+			  (char)Filterlength,
+			   (char)levels,
+			   (char)0, /*char Skip */
 			   waveletcoefficients,
 			   &co_length, 
 			   0 /* char ifnotSilent: 1 for printing */
@@ -101,7 +89,7 @@ return wavelet_decompose3(inspacevector,
 int invwavelet_transform2D(FLOAT * waveletcoefficients,
                          int xlength,
 			 int ylength,
-		       char Filterlength, /* 1,3,5,7 or 9 */
+		       int Filterlength, /* 1,3,5,7 or 9 */
 		       int levels,		       
 			 FLOAT  *outvector){
 
@@ -111,13 +99,9 @@ return  wavelet_reconstruct3(waveletcoefficients,
 			     xlength,
 			     ylength,
 			     1, /* zlength*/ 
-			     Filterlength,
-			     levels,
-			     0,  /* min ZLevel (changes coeff_length) */
-			     10, /* maxZLevels */ 
-			      0, /* minXYLevels (changes coeff_length)*/ 
-			     10, /* maxXYLevels */ 
-			     0,  /* Skip: general skiplevel
+			  (char)Filterlength,
+			     (char)levels,
+			     (char)0,  /* Skip: general skiplevel
 				    (changes coeff_length)*/ 
 			     0 /*ifnotSilent  set 1 for printing */
 			     );
@@ -129,7 +113,7 @@ return  wavelet_reconstruct3(waveletcoefficients,
 
 int wavelet_transform1D(FLOAT *inspacevector,
 		       int xlength,
-		       char Filterlength, /* 1,3,5,7 or 9 */
+		       int Filterlength, /* 1,3,5,7 or 9 */
 		       int levels,		       
 			FLOAT *waveletcoefficients
 			      			){
@@ -139,13 +123,9 @@ return wavelet_decompose3(inspacevector,
 			   xlength,
 			  1,/*ylength*/
 			   1,/*zlength,*/
-			  Filterlength,
-			  levels,
-			   0,  /* char minZLevels */ 
-			   10, /* char MaxZLevels */ 
-			   0,  /* char minXYLevels */ 
-			   10,  /*char MaxXYLevels */
-			   0, /*char Skip */
+			  (char)Filterlength,
+			  (char)levels,
+			   (char)0, /*char Skip */
 			   waveletcoefficients,
 			   &co_length, 
 			   0 /* char ifnotSilent: 1 for printing */
@@ -155,7 +135,7 @@ return wavelet_decompose3(inspacevector,
 
 int invwavelet_transform1D(FLOAT * waveletcoefficients,
                          int xlength,
-		       char Filterlength, /* 1,3,5,7 or 9 */
+		       int Filterlength, /* 1,3,5,7 or 9 */
 		       int levels,		       
 			  FLOAT  *outvector){
 
@@ -165,13 +145,9 @@ return  wavelet_reconstruct3(waveletcoefficients,
 			     xlength,
 			     1, /*ylength*/
 			     1, /* zlength*/ 
-			     Filterlength,
-			     levels,
-			     0,  /* min ZLevel (changes coeff_length) */
-			    10, /* maxZLevels */ 
-			      0, /* minXYLevels (changes coeff_length)*/ 
-			     10, /* maxXYLevels */ 
-			     0,  /* Skip: general skiplevel
+			  (char)   Filterlength,
+			     (char)levels,
+			     (char)0,  /* Skip: general skiplevel
 				    (changes coeff_length)*/ 
 			     0 /*ifnotSilent  set 1 for printing */
 			     );

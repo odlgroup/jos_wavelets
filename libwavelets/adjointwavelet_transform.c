@@ -1,5 +1,4 @@
 #include "bio.h"
-#define HIGH_PRECISION 1
 #ifndef HIGH_PRECISION
 #define FLOAT float
 #else
@@ -35,13 +34,9 @@ return wavelet_invadjoint3(inspacevector,
 			   xlength,
 			   ylength,
 			   zlength,
-			  (char) Filterlength,
-			   (char)levels, 
-			   0,  /* char minZLevels */ 
-			   10, /* char MaxZLevels */ 
-			   0,  /* char minXYLevels */ 
-			   10,  /*char MaxXYLevels */
-			   0, /*char Skip */
+			   (char) Filterlength,
+			    (char)levels, 
+			    (char)0, /*char Skip */
 			   waveletcoefficients,
 			   &co_length, 
 			   0 /* char ifnotSilent: 1 for printing */
@@ -54,7 +49,7 @@ int adjointwavelet_transform3D(FLOAT * waveletcoefficients,
                          int xlength,
 			 int ylength,
                          int zlength,
-		       ínt  Filterlength, /* 1,3,5,7 or 9 */
+		        int Filterlength, /* 1,3,5,7 or 9 */
 		       int levels,		       
                          FLOAT  *outvector){
 
@@ -64,13 +59,9 @@ return  wavelet_adjoint3(waveletcoefficients,
 			     xlength,
 			     ylength,
 			     zlength, 
-			 (char)Filterlength,
+			    (char)Filterlength,
 			     (char)levels,
-			     0,  /* min ZLevel (changes coeff_length) */
-			     10, /* maxZLevels */ 
-			      0, /* minXYLevels (changes coeff_length)*/ 
-			     10, /* maxXYLevels */ 
-			     0,  /* Skip: general skiplevel
+			     (char)0,  /* Skip: general skiplevel
 				    (changes coeff_length)*/ 
 			     0 /*ifnotSilent  set 1 for printing */
 			     );
@@ -81,7 +72,7 @@ return  wavelet_adjoint3(waveletcoefficients,
 int adjointinvwavelet_transform2D(FLOAT *inspacevector,
 		       int xlength,
 		       int ylength,
-		       int Filterlength, /* 1,3,5,7 or 9 */
+		        int Filterlength, /* 1,3,5,7 or 9 */
 		       int levels,		       
 		       FLOAT *waveletcoefficients
 			      			){
@@ -91,13 +82,9 @@ return wavelet_invadjoint3(inspacevector,
 			   xlength,
 			   ylength,
 			   1,/*zlength,*/
-			  (char) Filterlength,
+			   (char)Filterlength,
 			   (char)levels,
-			   0,  /* char minZLevels */ 
-			   0, /* char MaxZLevels */ 
-			   0,  /* char minXYLevels */ 
-			   10,  /*char MaxXYLevels */
-			   0, /*char Skip */
+			   (char)0, /*char Skip */
 			   waveletcoefficients,
 			   &co_length, 
 			   0 /* char ifnotSilent: 1 for printing */
@@ -109,7 +96,7 @@ return wavelet_invadjoint3(inspacevector,
 int adjointwavelet_transform2D(FLOAT * waveletcoefficients,
                          int xlength,
 			 int ylength,
-		       int Filterlength, /* 1,3,5,7 or 9 */
+		        int Filterlength, /* 1,3,5,7 or 9 */
 		       int levels,		       
 			 FLOAT  *outvector){
 
@@ -120,12 +107,8 @@ return  wavelet_adjoint3(waveletcoefficients,
 			     ylength,
 			     1, /* zlength*/ 
 			 (char)Filterlength,
-			     (char)levels, 
-			     0,  /* min ZLevel (changes coeff_length) */
-			     0, /* maxZLevels */ 
-			      0, /* minXYLevels (changes coeff_length)*/ 
-			     10, /* maxXYLevels */ 
-			     0,  /* Skip: general skiplevel
+			    (char) levels, 
+			     (char)0,  /* Skip: general skiplevel
 				    (changes coeff_length)*/ 
 			     0 /*ifnotSilent  set 1 for printing */
 			     );
@@ -137,7 +120,7 @@ return  wavelet_adjoint3(waveletcoefficients,
 
 int adjointinvwavelet_transform1D(FLOAT *inspacevector,
 		       int xlength,
-		       int Filterlength, /* 1,3,5,7 or 9 */
+		        int Filterlength, /* 1,3,5,7 or 9 */
 		       int levels,		       
 			FLOAT *waveletcoefficients
 			      			){
@@ -147,13 +130,9 @@ return wavelet_invadjoint3(inspacevector,
 			   xlength,
 			  1,/*ylength*/
 			   1,/*zlength,*/
-			  (char)Filterlength,
+			   (char)Filterlength,
 			   (char)levels, 
-			   0,  /* char minZLevels */ 
-			   0, /* char MaxZLevels */ 
-			   0,  /* char minXYLevels */ 
-			   10,  /*char MaxXYLevels */
-			   0, /*char Skip */
+			   (char)0, /*char Skip */
 			   waveletcoefficients,
 			   &co_length, 
 			   0 /* char ifnotSilent: 1 for printing */
@@ -173,13 +152,9 @@ return  wavelet_adjoint3(waveletcoefficients,
 			     xlength,
 			     1, /*ylength*/
 			     1, /* zlength*/ 
-			 (char)Filterlength,
-			     (char)levels, /*Levels of transforms*/
-			     0,  /* min ZLevel (changes coeff_length) */
-			     0, /* maxZLevels */ 
-			      0, /* minXYLevels (changes coeff_length)*/ 
-			     10, /* maxXYLevels */ 
-			     0,  /* Skip: general skiplevel
+			    (char) Filterlength,
+			    (char) levels, /*Levels of transforms*/
+			     (char)0,  /* Skip: general skiplevel
 				    (changes coeff_length)*/ 
 			     0 /*ifnotSilent  set 1 for printing */
 			     );
