@@ -22,6 +22,7 @@
 
 
 #include "bio_parameters.h"
+#include "boundary_macro.h"
 
 #ifndef FLOAT
 #define FLOAT float
@@ -261,7 +262,7 @@ if(zlength>1)Norm  /=  NORMALIZATION7;
 
 
 if(dim==0){Norm=1.0;X0=1.0;X1=1.0;X2=1.0;X3=1.0;}
-Norm=Norm /NORMALIZATION7;
+
 
 
 
@@ -392,9 +393,9 @@ X1=x0*x1;
   }
 
 
- if(dim==3)Norm =(x0);
+ if(dim==3)Norm =x0;
  if(dim==2)Norm=1.0; 
- if(dim==1)Norm= 1.0/(x0);
+ if(dim==1)Norm= 1.0/x0;
 
 
  if(xlength>1) Norm /= NORMALIZATION5;
@@ -439,23 +440,23 @@ int pairity;
 FLOAT Norm;
 int dim;
 
- dim=(xlength>1)+(ylength>1)+(zlength>1);
+dim=(xlength>1)+(ylength>1)+(zlength>1);
 
   if(ifnotAllskip){
- iX2=ix1/NORMALIZATION5;
+ iX2=ix1;
  iX1=1.0/(ix1*ix0);
  iX0=1.0/ix0;
   }else{
- iX2=ix0/NORMALIZATION5;
+ iX2=ix0;
  iX1=1.0;
  iX0=1.0/ix0;
   }
 
 
 
- if(dim==3)Norm =1.0/(ix0);
+ if(dim==3)Norm =1.0/ix0;
  if(dim==2)Norm=1.0; 
- if(dim==1)Norm= (ix0);
+ if(dim==1)Norm= ix0;
 
 
 if(xlength>1) Norm *= NORMALIZATION5;
@@ -518,7 +519,7 @@ if(dim==1)Norm=1.0/x0;
 if(ylength>1) Norm  /=  NORMALIZATION3; 
  if(zlength>1) Norm  /=  NORMALIZATION3;
 
- if(dim==0){Norm=1.0;X1=1.0;}
+ if(dim==0){Norm=1.0;X0=1.0,X1=1.0;}
 
 
 

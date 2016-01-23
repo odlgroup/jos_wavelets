@@ -303,8 +303,8 @@ if(zlength>1) Norm *= X1;
 
 
  if(xlength>1) Norm *= NORMALIZATION7;
-if(ylength>1) Norm  *=  NORMALIZATION7; 
- if(zlength>1) Norm  *=  NORMALIZATION7;
+if(ylength>1)  Norm   *=  NORMALIZATION7; 
+ if(zlength>1) Norm   *=  NORMALIZATION7;
 
 
 
@@ -492,7 +492,7 @@ if(dim==0){Norm=1.0;X0=1.0;X1=1.0;X2=1.0;}
 
 /*warning invector will be overwritten */
 pairity=0;
-bio_3d_premult(invector,xlength,ylength,zlength,X0,pairity);
+ bio_3d_premult(invector,xlength,ylength,zlength,X0,pairity);
 pairity=1;
 bio_3d_premult(invector,xlength,ylength,zlength,X1,pairity);
 
@@ -500,11 +500,11 @@ bio_3d_premult(invector,xlength,ylength,zlength,X1,pairity);
   boundarymultiply(invector,xlength,ylength,zlength,0.5);
 #endif
 
-if(ifnotAllskip)bioD1__3d(invector,HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
+  if(ifnotAllskip)bioD1__3d(invector,HHH,HHL,HLH,HLL,LHH,LHL,LLH,LLL,
 			  xlength,ylength,zlength,X2,Norm);
-else  {
+  else{
 
-bioD1_3dskip(invector,LLL,xlength,ylength,zlength,X2,Norm);
+   bioD1_3dskip(invector,LLL,xlength,ylength,zlength,X2,Norm);
 }
 
       }
@@ -578,10 +578,6 @@ pairity=1;
 
 bio_3d_postmult(outvector,xlength,ylength,zlength,iX1,pairity);
 
-#ifdef BMULT
-  boundarymultiply(outvector,xlength,ylength,zlength,0.5);
-#endif
-
 }
  else{  bioR1_3dskip(LLL,outvector,xlength,ylength,zlength,iX2,Norm);
 
@@ -624,12 +620,18 @@ FLOAT X1=1.0 /x0;
 int pairity; 
 
 FLOAT Norm;
+int dim;
+dim = (xlength > 1)+(ylength > 1)+(zlength > 1);
+
+
 Norm = 1.0 ;
 
 
 if(xlength>1) Norm *= NORMALIZATION3;
 if(ylength>1) Norm  *=  NORMALIZATION3; 
 if(zlength>1) Norm  *=  NORMALIZATION3;
+
+if(dim==0){Norm=1.0;X0=1.0;X1=1.0;}
 
 /* norm = X0 / X1 ==1;*/
 /*
@@ -678,6 +680,8 @@ int ifnotAllskip;
 
 int pairity;
 FLOAT Norm;
+ int dim;
+dim = (xlength > 1)+(ylength > 1)+(zlength > 1);
 
   if(ifnotAllskip){
  iX1=ix0;
@@ -695,6 +699,7 @@ Norm = 1.0  ;
 if(ylength>1) Norm  /=  NORMALIZATION3; 
  if(zlength>1) Norm  /=  NORMALIZATION3;
 
+if(dim==0){Norm=1.0;iX0=1.0;iX1=1.0;}
  
  /* switching needed since we have pairith=1: */
 /* 
