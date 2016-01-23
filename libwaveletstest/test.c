@@ -1,13 +1,27 @@
-#include <stdlib.h>
+/*  uncomment next line for checking reconstruction  vith inverse adjoint */
+//#define  ADJOINT_TRANSF
+
+#define DIM   3           /*  dimension 1, 2 or 3 */
+#define FILTERLENGTH    9     /* 1, 3, 5, 7 or 9 */
+/* FILTERLENGtH 1: decimation only  L is even decimation; 
+                                    H is odd decimation */  
+#define SCALES 10
+
+
+#define XLength 512
+#define YLength 513    /*   used only in dimension 2 and 3 */
+#define ZLength 511      /*  used only in dimension 3  */
+
+
+/***********DEFINITINS ABOVE MAY BE CHANGES BY USER     *****************/
+
+ #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
 
 
 
-#define XLength 470
-#define YLength 500   // has to be 1 for 1D test
-#define ZLength 400   // has to be 1 for 1D  and 2D  test
 
  /* makefile for test  has an include file;  ../build/makefile.setting
      where "HIGH_PRECISION"   (is/is not)  defined  */
@@ -20,28 +34,42 @@
 #define FLOAT double
 #endif
 
-#include "../libwavelets/wavelet_transform.h"
+#include "../include/wavelet_transform.h"
 #include "test.h"
 
 
 int main()
 {
+
+#if(DIM==3)
   int Xlength=XLength;
   int Ylength=YLength;
   int Zlength=ZLength;
+#endif
+#if(DIM==2)
+  int Xlength=XLength;
+  int Ylength=YLength;
+  int Zlength=1;
+#endif
+#if(DIM==1)
+  int Xlength=XLength;
+  int Ylength=1;
+  int Zlength=1;
+#endif
+
   clock_t  time0, time1,time2,time3,time4,time5;
 
  
 
-    FLOAT *body,*body_out;
+  FLOAT *body,*body_out;
   FLOAT *waveletcoeff;
   unsigned int a=0;
   unsigned int mask12=0xfff;  /*  mask with 12  "ones"  */     
   FLOAT * ptr;
-int size;
+  int size;
 
- FLOAT *diffvector;
-FLOAT  *body_save;
+  FLOAT *diffvector;
+  FLOAT  *body_save;
 double maxvalue=0;
 double poserror=0;
 double negerror=0;
@@ -57,8 +85,18 @@ FLOAT SNR;
  int k;
 /* for 2D test and  1D test : */
 //Zlength=1; 
-/* for 1D test:  */
-//Ylength=1;
+/* for 1D test:  *///Ylength=1;
+
+#ifndef ADJOINT_TRANSF
+  printf("Test of reconstruction with symmetric biorthogonal filters \n \
+         Filterlength=%d, Number of scales=%d\n\n",FILTERLENGTH,SCALES);
+
+#else
+        printf("Test of reconstruction with the adjoint filters of \n \
+\t symmetric  biorthogonal filters with filterlength=%d.\n\
+\t Number of scales=%d\n\n",FILTERLENGTH,SCALES);
+#endif
+
 size = Xlength*Ylength*Zlength;
 
 /* Allocation of arrays used in test */
@@ -67,14 +105,14 @@ size = Xlength*Ylength*Zlength;
 waveletcoeff=(FLOAT*)malloc((unsigned int)(size*sizeof(FLOAT)));
 body_out=(FLOAT*)malloc((unsigned int)(size*sizeof(FLOAT)));
  body_save=(FLOAT*)malloc((unsigned int)(size*sizeof(FLOAT))); 
-diffvector=(FLOAT*)malloc((unsigned int)(size*sizeof(FLOAT))); 
+ diffvector=(FLOAT*)malloc((unsigned int)(size*sizeof(FLOAT))); 
 ptr=body;
 
  time0=clock();    /* uses c-call clock()  for timing process */ 
  
 for(k=0;k<size;k++){
-a=mask12&random();       /*generetin 12 bits unsigned integer */
-//a=1.0;
+  a=mask12&random();       /*generetin 12 bits unsigned integer */
+  //a=1.0;
  *ptr++=(FLOAT)a;       /* converting and saving on FLOAT array  */
  }
 time1=clock(); 
@@ -86,15 +124,46 @@ time1=clock();
  time2=clock(); 
 
  
+
  /* CHOOSE dimension  1D  2D or 3D  also TRANSFORM or ADJOINT */
  /*  ERASE  comment sign  "//" for one only of following six lines
  */
- wavelet_transform3D(body,Xlength,Ylength,Zlength,9,10,waveletcoeff);
- //wavelet_transform2D(body,Xlength,Ylength,9,10,waveletcoeff);
- //wavelet_transform1D(body,Xlength,9,10,waveletcoeff);
- //adjointinvwavelet_transform3D(body,Xlength,Ylength,Zlength,9,10,waveletcoeff);
- //adjointinvwavelet_transform2D(body,Xlength,Ylength,9,10,waveletcoeff);
- //adjointinvwavelet_transform1D(body,Xlength,9,10,waveletcoeff);
+#ifndef ADJOINT_TRANSF
+
+#if(DIM==3) 
+wavelet_transform3D(body,Xlength,Ylength,Zlength,
+ FILTERLENGTH,SCALES,waveletcoeff);
+#endif
+
+#if(DIM==2) 
+ wavelet_transform2D(body,Xlength,Ylength,
+		     FILTERLENGTH,SCALES,waveletcoeff);
+#endif
+
+#if(DIM==1) 
+wavelet_transform1D(body,Xlength,
+		    FILTERLENGTH,SCALES,waveletcoeff);
+#endif
+
+#else
+
+#if(DIM==3) 
+adjointinvwavelet_transform3D(body,Xlength,Ylength,Zlength,
+				FILTERLENGTH,SCALES,waveletcoeff);
+
+#endif
+
+#if(DIM==2) 
+adjointinvwavelet_transform2D(body,Xlength,Ylength,
+			      FILTERLENGTH,SCALES,waveletcoeff);
+#endif
+
+#if(DIM==1) 
+adjointinvwavelet_transform1D(body,Xlength,
+  FILTERLENGTH,SCALES,waveletcoeff);
+#endif
+
+#endif
 
  time3=clock();
  
@@ -106,14 +175,41 @@ time1=clock();
  /*  ERASE  comment sign  "//" for one only of following six lines
  */ 
  /* CHOOSE dimension  1D  2D or 3D  also TRANSFORM or ADJOINT */
+#ifndef ADJOINT_TRANSF
 
- invwavelet_transform3D(waveletcoeff,Xlength,Ylength,Zlength,9,10,body_out);
- //invwavelet_transform2D(waveletcoeff,Xlength,Ylength,9,10,body_out);
- //invwavelet_transform1D(waveletcoeff,Xlength,9,10,body_out);
- //adjointwavelet_transform3D(waveletcoeff,Xlength,Ylength,Zlength,9,10,body_out);
- //adjointwavelet_transform2D(waveletcoeff,Xlength,Ylength,9,10,body_out);
- //adjointwavelet_transform1D(waveletcoeff,Xlength,9,10,body_out);
+#if(DIM==3) 
+invwavelet_transform3D(waveletcoeff,Xlength,Ylength,Zlength,
+		       FILTERLENGTH,SCALES,body_out);
+#endif
 
+#if(DIM==2) 
+ invwavelet_transform2D(waveletcoeff,Xlength,Ylength,
+			FILTERLENGTH,SCALES,body_out);
+#endif
+
+#if(DIM==1) 
+invwavelet_transform1D(waveletcoeff,Xlength,
+		       FILTERLENGTH,SCALES,body_out);
+#endif
+
+#else
+
+#if(DIM==3) 
+ adjointwavelet_transform3D(waveletcoeff,Xlength,Ylength,Zlength,
+			    FILTERLENGTH,SCALES,body_out);
+#endif
+
+#if(DIM==2) 
+adjointwavelet_transform2D(waveletcoeff,Xlength,Ylength,
+			   FILTERLENGTH,SCALES,body_out);
+#endif
+
+#if(DIM==1) 
+adjointwavelet_transform1D(waveletcoeff,Xlength,
+			   FILTERLENGTH,SCALES,body_out);
+#endif
+
+#endif
  time4=clock();
  // for(k=0;k<size;k++)printf("outdata  %f , ",body_out[k]);
  printf("\n");
