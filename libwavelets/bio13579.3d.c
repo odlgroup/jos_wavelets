@@ -22,7 +22,7 @@
 
 
 #include "bio_parameters.h"
-#include "boundary_macro.h"
+//#include "boundary_macro.h"    old stuff not use
 
 #ifndef FLOAT
 #define FLOAT float
