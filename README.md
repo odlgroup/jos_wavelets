@@ -1,5 +1,5 @@
-Libwavelet_transform
-----
+JOS_wavelets
+------------
 
 This library written in C contains functions for computing
 wavelet coefficients in dimension 1, dimension 2 and dimension 3:
@@ -29,7 +29,7 @@ and the corresponding inverse transforms
 there declarations is given in the header [wavelet_transform.h](wavelet/wavelet_transform.h).
 
 Building
-----
+--------
 
 The build process is governed by [CMake](http://www.cmake.org/).
 
@@ -52,6 +52,7 @@ To build on windows, open the CMake gui, run configure-generate. Then open the p
 The build can be controlled by changing build flags in the [CMake file](CMakeLists.txt).
 
 #### Precision
+
 All input vectors, coefficient vector and output vectors are
 assumed to be of the type FLOAT. Here FLOAT is defined to be a 32 bit float unless the macro HIGH_PRECISION is defined and in that case FLOAT is define as a 64 bit double.
 
@@ -68,9 +69,14 @@ Note that if you want to run compile the test after changing the precision you h
 When building on UNIX type system (with e.g. make), the build mode is controlled by the CMake flags `OPTIMIZATION` and `DEBUGGING`.
 
 Usage notes
-----
+-----------
+
 IN-GOING ARRAYS ARE WRITTEN OVER
 
 All wavelet_transforms use the input array to store intermediate results in the calculations. If you want to keep the input vector results you have to make your own copy of the input vector.
 
 The same holds for the in-going wavelet coefficient vector when running the inverse wavelet transforms.
+
+#### License
+
+The source code is licensed under the GPL version 3. See the LICENSE file.
