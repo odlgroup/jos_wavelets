@@ -13,6 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with jos_wavelets.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "bio.h"
+#include "bio_parameters.h"
 
 int wavelet_transform3D(FLOAT * ,//invector,
 			int, //xlength,
