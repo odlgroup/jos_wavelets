@@ -15,7 +15,7 @@ endif(WIN32)
 
 set(LIB_NAME "jos_waveletspy")
 set(PYTHON_LIBS ${PYTHON_LIBS} ${LIB_NAME})
-add_library(${LIB_NAME} SHARED "jos_wavelets.cpp")
+add_library(${LIB_NAME} SHARED "jos_waveletspy.cpp")
 set_property(TARGET ${LIB_NAME} PROPERTY FOLDER python)
 target_link_libraries(${LIB_NAME} jos_wavelets ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 

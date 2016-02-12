@@ -82,6 +82,6 @@ if(MEX_ENABLED)
 	add_subdirectory (mex)
 endif(MEX_ENABLED)
 if(PYTHON_ENABLED)
-	add_subdirectory (jos_wavelets)
+	add_subdirectory (jos_waveletspy)
 endif(PYTHON_ENABLED)
 
