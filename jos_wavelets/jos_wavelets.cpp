@@ -5,7 +5,7 @@
 #include <vector>
 
 extern "C" {
-#include <libwavelets/wavelet_transform.h>
+#include <lib/wavelet_transform.h>
 }
 
 using namespace boost::python;

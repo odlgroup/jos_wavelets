@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.6) 
-project (jos_wavelets)
+project (libjos_wavelets)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake) # add FindMatlab module
 

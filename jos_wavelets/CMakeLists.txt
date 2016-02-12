@@ -13,11 +13,11 @@ else(WIN32)
 	set(TARGET_PY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 endif(WIN32)
 
-set(LIB_NAME "jos_wavelets")
+set(LIB_NAME "jos_waveletspy")
 set(PYTHON_LIBS ${PYTHON_LIBS} ${LIB_NAME})
 add_library(${LIB_NAME} SHARED "jos_wavelets.cpp")
 set_property(TARGET ${LIB_NAME} PROPERTY FOLDER python)
-target_link_libraries(${LIB_NAME} libwavelets ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
+target_link_libraries(${LIB_NAME} jos_wavelets ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 
 set(INSTALL_LIB "pyinstall")
 add_custom_target(${INSTALL_LIB} COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py ${TARGET_PY}/__init__.py)
