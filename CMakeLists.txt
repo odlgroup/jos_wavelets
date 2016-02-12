@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.6) 
-project (libjos_wavelets)
+project (jos_wavelets)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake) # add FindMatlab module
 
@@ -46,6 +46,7 @@ if(PYTHON_ENABLED)
 	link_directories(${Boost_LIBRARY_DIRS})
 	
 	# Find python
+    find_package(PythonInterp REQUIRED)
 	find_package(PythonLibs REQUIRED)
 	include_directories(${PYTHON_INCLUDE_DIRS})
 	
