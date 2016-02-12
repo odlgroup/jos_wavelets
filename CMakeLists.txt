@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.6) 
-project (libwavelets)
+project (jos_wavelets)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake) # add FindMatlab module
 
@@ -75,10 +75,10 @@ else(OPTIMIZATION)
 endif(OPTIMIZATION)
 
 # Add sub directories as needed
-add_subdirectory (libwavelets)
-add_subdirectory (libwaveletstest)
+add_subdirectory (lib)
+add_subdirectory (test)
 if(MEX_ENABLED)
-	add_subdirectory (libwaveletsmex)
+	add_subdirectory (mex)
 endif(MEX_ENABLED)
 if(PYTHON_ENABLED)
 	add_subdirectory (jos_wavelets)

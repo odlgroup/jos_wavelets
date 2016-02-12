@@ -12,7 +12,7 @@ from distutils.core import setup
 setup(name='jos_wavelets',
       # version=__version__,
       version='0.1.1',
-      author='Jonas Adler & Julian Moosmann',
+      author='Jan-Olov Stromberg, Jonas Adler, Julian Moosmann',
       author_email='odl@math.kth.se',
       url='//https://github.com/odlgroup/jos_wavelets.git',
       description='Python bindings for the jos_wavelets library',
